@@ -2,7 +2,7 @@
 # include <stdlib.h>
 
 double wall_time(void);
-double skalar(double a[], double b[], int n);
+double skalar(double a[], double b[], int n, int step);
 void empty(void);
 
 int main(int argc, char *argv[])
@@ -13,7 +13,6 @@ int main(int argc, char *argv[])
     n = atoi(argv[1]);
     r = atoi(argv[2]);
     step = atoi(argv[3]);
-    j_max = r*step;
     a = (double *) malloc(n * sizeof(double));
     b = (double *) malloc(n * sizeof(double));
 
@@ -29,8 +28,8 @@ int main(int argc, char *argv[])
     }
 
     time = wall_time();
-    for (j = 0; j < j_max; j+=step) {
-        s = skalar(a, b, n);
+    for (j = 0; j < r; j++) {
+        s = skalar(a, b, n, step);
     }
     time = wall_time() - time;
 

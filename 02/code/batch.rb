@@ -19,7 +19,7 @@ end
 repitions = { 5 => 2, 6 => 1, 7 => 0 }
 repitions.default = 3
 
-File.open('data.dat', 'w') do |file|
+File.open('../data/data.dat', 'w') do |file|
   file.puts "#N S gcc gcc(0) gcc(3) icc icc(0) icc(3) pgcc pgcc(0) pgcc(3)"
   (2..7).each do |n|
     nn = 10**n
@@ -37,7 +37,13 @@ File.open('data.dat', 'w') do |file|
           10.times do |i|
             print "#{i} "
             out = `./a.out #{nn} #{r} #{ss}`
-            values << out.match(/Rechenleistung :\s+(.+)\s+MFlop\/s/)[1].to_f
+            match = out.match(/Rechenleistung :\s+(.+)\s+MFlop\/s/)
+            if match
+              values << match[1].to_f
+            else
+              puts out
+              gets
+            end
           end
           line += " %6.1f" % values.median
         end
