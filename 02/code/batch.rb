@@ -36,16 +36,16 @@ File.open('../data/data.dat', 'w') do |file|
           values = []
           10.times do |i|
             print "#{i} "
-            out = `./a.out #{nn} #{r} #{ss}`
+            cmd = "./a.out #{nn} #{r} #{ss}"
+            out = `#{cmd}`
             match = out.match(/Rechenleistung :\s+(.+)\s+MFlop\/s/)
             if match
               values << match[1].to_f
             else
-              puts out
-              gets
+              $stderr.puts "Fehler bei #{cmd}"
             end
           end
-          line += " %6.1f" % values.median
+          line += " %6.1f" % values.median if values.any?
         end
       end
       file.puts line
