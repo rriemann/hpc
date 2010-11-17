@@ -7,24 +7,25 @@ void empty(void);
 
 int main(int argc, char *argv[])
 {
-    int i, j, j_max, n, r, step;
+    int i, j, n, r, step;
     double s, time, ttime, *a, *b;
 
     n = atoi(argv[1]);
     r = atoi(argv[2]);
     step = atoi(argv[3]);
-    a = (double *) malloc(n * sizeof(double));
-    b = (double *) malloc(n * sizeof(double));
+    a = (double *) malloc(step * n * sizeof(double));
+    b = (double *) malloc(step * n * sizeof(double));
 
     time = wall_time();
     time = wall_time();
     for (i = 0; i < r; i++)
-	empty();
+        empty();
     ttime = wall_time() - time;
 
     for (i = 0; i < n; i++) {
-	a[i] = i;
-	b[i] = 1.0 / (i + 1);
+        int ii = step*i;
+        a[ii] = i;
+        b[ii] = 1.0 / (i + 1);
     }
 
     time = wall_time();
