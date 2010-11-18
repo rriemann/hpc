@@ -23,9 +23,8 @@ int main(int argc, char *argv[])
     ttime = wall_time() - time;
 
     for (i = 0; i < n; i++) {
-        int ii = step*i;
-        a[ii] = i;
-        b[ii] = 1.0 / (i + 1);
+        a[i] = i;
+        b[i] = 1.0 / (i + 1);
     }
 
     time = wall_time();
