@@ -51,6 +51,21 @@ plot "../data/data.dat" using 1:( $2==4 ? $6 : 1/0 ) pt 2 t "icc", "" using 1:( 
 set output "../tmp/step4_pgcc.ps"
 plot "../data/data.dat" using 1:( $2==4 ? $9 : 1/0 ) pt 2 t "pgcc", "" using 1:( $2==4 ? $10 : 1/0 ) pt 147 t "pgcc -O0", "" using 1:( $2==4 ? $11 : 1/0 ) pt 70 t "pgcc -O3"
 
+set key left top
+set output "../tmp/s01_o3.ps"
+plot "../data/data.dat" using 1:( $2==1 ? $5 : 1/0 ) pt 2 t "gcc", "" using 1:( $2==1 ? $8 : 1/0 ) pt 147 t "icc", "" using 1:( $2==1 ? $11 : 1/0 ) pt 70 t "pgcc"
+
+set key left top
+set output "../tmp/s64_o3.ps"
+plot "../data/data.dat" using 1:( $2==64 ? $5 : 1/0 ) pt 2 t "gcc", "" using 1:( $2==64 ? $8 : 1/0 ) pt 147 t "icc", "" using 1:( $2==64 ? $11 : 1/0 ) pt 70 t "pgcc"
+
+set key left top
+set output "../tmp/s01_o0.ps"
+plot "../data/data.dat" using 1:( $2==1 ? $4 : 1/0 ) pt 2 t "gcc", "" using 1:( $2==1 ? $7 : 1/0 ) pt 147 t "icc", "" using 1:( $2==1 ? $10 : 1/0 ) pt 70 t "pgcc"
+
+set key left top
+set output "../tmp/s64_o0.ps"
+plot "../data/data.dat" using 1:( $2==64 ? $4 : 1/0 ) pt 2 t "gcc", "" using 1:( $2==64 ? $7 : 1/0 ) pt 147 t "icc", "" using 1:( $2==64 ? $10 : 1/0 ) pt 70 t "pgcc"
 
 ########################### gcc
 
@@ -66,17 +81,6 @@ set key left bottom
 set output "../tmp/gcc_o3.ps"
 plot "../data/data.dat" using 1:( $2==1 ? $5 : 1/0 ) pt 2 t "stride 1", "" using 1:( $2==2 ? $5 : 1/0 ) pt 147 t "stride 2", "" using 1:( $2==4 ? $5 : 1/0 ) pt 70 t "stride 4", "" using 1:( $2==8 ? $5 : 1/0 ) pt 151 t "stride 8", "" using 1:( $2==16 ? $5 : 1/0 ) pt 148 t "stride 16", "" using 1:( $2==32 ? $5 : 1/0 ) pt 146 t "stride 32", "" using 1:( $2==64 ? $5 : 1/0 ) pt 74 t "stride 64"
 
-set key left top
-set output "../tmp/s01_o3.ps"
-plot "../data/data.dat" using 1:( $2==1 ? $5 : 1/0 ) pt 2 t "gcc", "" using 1:( $2==1 ? $8 : 1/0 ) pt 147 t "icc", "" using 1:( $2==1 ? $11 : 1/0 ) pt 70 t "pgcc"
-
-set key left top
-set output "../tmp/s64_o3.ps"
-plot "../data/data.dat" using 1:( $2==64 ? $5 : 1/0 ) pt 2 t "gcc", "" using 1:( $2==64 ? $8 : 1/0 ) pt 147 t "icc", "" using 1:( $2==64 ? $11 : 1/0 ) pt 70 t "pgcc"
-# trenner
-
-#
-
 ########################### icc
 
 set key left bottom
@@ -90,7 +94,6 @@ plot "../data/data.dat" using 1:( $2==1 ? $7 : 1/0 ) pt 2 t "stride 1", "" using
 set key left bottom
 set output "../tmp/icc_o3.ps"
 plot "../data/data.dat" using 1:( $2==1 ? $8 : 1/0 ) pt 2 t "stride 1", "" using 1:( $2==2 ? $8 : 1/0 ) pt 147 t "stride 2", "" using 1:( $2==4 ? $8 : 1/0 ) pt 70 t "stride 4", "" using 1:( $2==8 ? $8 : 1/0 ) pt 151 t "stride 8", "" using 1:( $2==16 ? $8 : 1/0 ) pt 148 t "stride 16", "" using 1:( $2==32 ? $8 : 1/0 ) pt 146 t "stride 32", "" using 1:( $2==64 ? $8 : 1/0 ) pt 74 t "stride 64"
-
 
 ############################ pgcc
 
