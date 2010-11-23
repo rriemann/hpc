@@ -52,6 +52,8 @@ set output "../tmp/step4_pgcc.ps"
 plot "../data/data.dat" using 1:( $2==4 ? $9 : 1/0 ) pt 2 t "pgcc", "" using 1:( $2==4 ? $10 : 1/0 ) pt 147 t "pgcc -O0", "" using 1:( $2==4 ? $11 : 1/0 ) pt 70 t "pgcc -O3"
 
 
+########################### gcc
+
 set key left bottom
 set output "../tmp/gcc_o.ps"
 plot "../data/data.dat" using 1:( $2==1 ? $3 : 1/0 ) pt 2 t "stride 1", "" using 1:( $2==2 ? $3 : 1/0 ) pt 147 t "stride 2", "" using 1:( $2==4 ? $3 : 1/0 ) pt 70 t "stride 4", "" using 1:( $2==8 ? $3 : 1/0 ) pt 151 t "stride 8", "" using 1:( $2==16 ? $3 : 1/0 ) pt 148 t "stride 16", "" using 1:( $2==32 ? $3 : 1/0 ) pt 146 t "stride 32", "" using 1:( $2==64 ? $3 : 1/0 ) pt 74 t "stride 64"
@@ -74,3 +76,32 @@ plot "../data/data.dat" using 1:( $2==64 ? $5 : 1/0 ) pt 2 t "gcc", "" using 1:(
 # trenner
 
 #
+
+########################### icc
+
+set key left bottom
+set output "../tmp/icc_o.ps"
+plot "../data/data.dat" using 1:( $2==1 ? $6 : 1/0 ) pt 2 t "stride 1", "" using 1:( $2==2 ? $6 : 1/0 ) pt 147 t "stride 2", "" using 1:( $2==4 ? $6 : 1/0 ) pt 70 t "stride 4", "" using 1:( $2==8 ? $6 : 1/0 ) pt 151 t "stride 8", "" using 1:( $2==16 ? $6 : 1/0 ) pt 148 t "stride 16", "" using 1:( $2==32 ? $6 : 1/0 ) pt 146 t "stride 32", "" using 1:( $2==64 ? $6 : 1/0 ) pt 74 t "stride 64"
+
+set key left bottom
+set output "../tmp/gcc_o0.ps"
+plot "../data/data.dat" using 1:( $2==1 ? $7 : 1/0 ) pt 2 t "stride 1", "" using 1:( $2==2 ? $7 : 1/0 ) pt 147 t "stride 2", "" using 1:( $2==4 ? $7 : 1/0 ) pt 70 t "stride 4", "" using 1:( $2==8 ? $7 : 1/0 ) pt 151 t "stride 8", "" using 1:( $2==16 ? $7 : 1/0 ) pt 148 t "stride 16", "" using 1:( $2==32 ? $7 : 1/0 ) pt 146 t "stride 32", "" using 1:( $2==64 ? $7 : 1/0 ) pt 74 t "stride 64"
+
+set key left bottom
+set output "../tmp/gcc_o0.ps"
+plot "../data/data.dat" using 1:( $2==1 ? $8 : 1/0 ) pt 2 t "stride 1", "" using 1:( $2==2 ? $8 : 1/0 ) pt 147 t "stride 2", "" using 1:( $2==4 ? $8 : 1/0 ) pt 70 t "stride 4", "" using 1:( $2==8 ? $8 : 1/0 ) pt 151 t "stride 8", "" using 1:( $2==16 ? $8 : 1/0 ) pt 148 t "stride 16", "" using 1:( $2==32 ? $8 : 1/0 ) pt 146 t "stride 32", "" using 1:( $2==64 ? $8 : 1/0 ) pt 74 t "stride 64"
+
+
+############################ pgcc
+
+set key left bottom
+set output "../tmp/gcc_o0.ps"
+plot "../data/data.dat" using 1:( $2==1 ? $9 : 1/0 ) pt 2 t "stride 1", "" using 1:( $2==2 ? $9 : 1/0 ) pt 147 t "stride 2", "" using 1:( $2==4 ? $9 : 1/0 ) pt 70 t "stride 4", "" using 1:( $2==8 ? $9 : 1/0 ) pt 151 t "stride 8", "" using 1:( $2==16 ? $9 : 1/0 ) pt 148 t "stride 16", "" using 1:( $2==32 ? $9 : 1/0 ) pt 146 t "stride 32", "" using 1:( $2==64 ? $9 : 1/0 ) pt 74 t "stride 64"
+
+set key left bottom
+set output "../tmp/gcc_o0.ps"
+plot "../data/data.dat" using 1:( $2==1 ? $10 : 1/0 ) pt 2 t "stride 1", "" using 1:( $2==2 ? $10 : 1/0 ) pt 147 t "stride 2", "" using 1:( $2==4 ? $10 : 1/0 ) pt 70 t "stride 4", "" using 1:( $2==8 ? $10 : 1/0 ) pt 151 t "stride 8", "" using 1:( $2==16 ? $10 : 1/0 ) pt 148 t "stride 16", "" using 1:( $2==32 ? $10 : 1/0 ) pt 146 t "stride 32", "" using 1:( $2==64 ? $10 : 1/0 ) pt 74 t "stride 64"
+
+set key left bottom
+set output "../tmp/gcc_o0.ps"
+plot "../data/data.dat" using 1:( $2==1 ? $11 : 1/0 ) pt 2 t "stride 1", "" using 1:( $2==2 ? $11 : 1/0 ) pt 147 t "stride 2", "" using 1:( $2==4 ? $11 : 1/0 ) pt 70 t "stride 4", "" using 1:( $2==8 ? $11 : 1/0 ) pt 151 t "stride 8", "" using 1:( $2==16 ? $11 : 1/0 ) pt 148 t "stride 16", "" using 1:( $2==32 ? $11 : 1/0 ) pt 146 t "stride 32", "" using 1:( $2==64 ? $11 : 1/0 ) pt 74 t "stride 64"
