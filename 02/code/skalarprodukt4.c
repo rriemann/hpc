@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     printf("Zeit pro Wdhlg : %g s\n", time / r);
     printf("Overhead       : %g s\n", ttime / r);
 //     printf("Rechenleistung : %6.1f MFlop/s\n", 2.0 * n * r * 1e-6 / (time - ttime));
-    printf("Rechenleistung : %6.1f MFlop/s\n", 2.0 * n/step * r * 1e-6 / (time - ttime));
+    printf("Rechenleistung : %6.1f MFlop/s\n", 2.0 * (n/step+1) * r * 1e-6 / (time - ttime));
 
     free(a);
     free(b);
