@@ -48,7 +48,18 @@ aus dem Cache. Für noch größere Längen bleibt die Leistung auf dem gleichen 
 Man kann für die meisten Plots einen weiteren Leistungseinbruch beobachten, dieses
 mal zwischen $n=1000$ und $n=10000$. Dies lässt sich dadurch begründen, dass neben
 dem Level-2-Cache (L2-Cache) ein kleinerer Level-1-Cache (L1-Cache) existiert, zu
-dem die Daten aus dem L2-Cache transportiert werden müssen.
+dem die Daten aus dem L2-Cache transportiert werden müssen. Hierbei ist die Bandbreite
+begrenzt, sodass sich dies auf die effektive Leistung auswirken kann. Dabei ist auch
+die Schrittweite von Bedeutung, da die Größe des L1-Caches sehr limitiert ist (einige
+Kilobyte bis einige hundert Kilobyte) und daher nur wesentlich kleinere Teile der
+Vektoren in diesen Cache passen und bei einer größeren Schrittweite öfter nachgeladen
+werden muss. Dies kann zu dem beobachteten Effekt führen. Um die Größenordnung des
+L1-Caches zu verifizieren, wird kurz überschlagen, welchem Speicherbedarf die
+genannten Vektorlängen entsprechen: $$2\cdot64\cdot \SI{1e4}{\bit} \approx 
+\SI{156}{\kibi\byte},$$ was mit den Erwartungen übereinstimmt. Es ist also sehr
+wahrscheinlich, dass es sich bei diesem Einbruch um einen Bandbreiteneffekt zwischen
+L2- und L1-Cache handelt.
+
 
 
 
