@@ -35,7 +35,7 @@ Zunächst wird der Einfluss der Vektorlänge studiert. Unabhängig vom Compiler,
 der Optimierungsstufe und von der Schrittlänge nimmt die Rechenleistung tendenziell
 ab, wenn man die Länge der Vektoren vergrößert. Dies geschieht meist sprunghaft,
 also nicht kontinuierlich. Dafür gibt es mehrere Ursachen. Zum einen kann beobachtet
-werden, dass es (zum Beispiel in \textcolor{red}{gcc,o3}) zwischen $n=\num{1e5}$ und
+werden, dass es (zum Beispiel in \fref{gcc_o3}) zwischen $n=\num{1e5}$ und
 $n=\num{1e6}$ zu einem Leistungseinbruch um einen Faktor von ca. drei bis vier kommt.
 Dies lässt sich über die Speichergrößen der beteiligten Vektoren begründen. Wenn 
 man zwei Vektoren betrachtet, die die Länge \num{1e6} besitzen und mit Zahlen vom Typ
@@ -44,7 +44,14 @@ $2\cdot \num{64e6}\mbox{~bit}\approx \SI{15.3}{\mega\byte}$. Die Größe des Cac
 beträgt \SI{6}{\mega\byte}, sodass ab etwa einer Vektorlänge von schätzungsweise \num{0.5e6}     die 
 Vektoren nicht mehr in den Cache passen. Daher ist das Betriebssystem gezwungen,
 die Daten aus dem Arbeitsspeicher zu laden, was deutlich langsamer ist als das Laden
-aus dem Cache.
+aus dem Cache. Für noch größere Längen bleibt die Leistung auf dem gleichen Niveau.
+Man kann für die meisten Plots einen weiteren Leistungseinbruch beobachten, dieses
+mal zwischen $n=1000$ und $n=10000$. Dies lässt sich dadurch begründen, dass neben
+dem Level-2-Cache (L2-Cache) ein kleinerer Level-1-Cache (L1-Cache) existiert, zu
+dem die Daten aus dem L2-Cache transportiert werden müssen.
+
+
+
 
 % - gcc_o:	max. leistung: ca. 360
 % 		anfang: alles ähnlich, 100 kaum aussagekräftig, ab 1e6: stride > 1 deutlich schlechter als stride = 1, größerer stride -> schlechterer wert, stimmt für 16 bis 64 überein
