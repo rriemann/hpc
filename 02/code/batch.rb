@@ -31,8 +31,8 @@ File.open('../data/data.dat', 'w') do |file|
           r = 10**repitions[n]
           puts "\ncurrent config: #{compiler}#{optimization} N=#{nn} S=#{ss} r=#{r}"
           system 'rm -f *.o a.out'
-          system "#{compiler}#{optimization} -c skalar.c empty.c > /dev/null 2>&1"
-          system "#{compiler}#{optimization} skalarprodukt4.c skalar.o empty.o wall_time.c > /dev/null 2>&1"
+          system "#{compiler}#{optimization} -c daxpy.c empty.c > /dev/null 2>&1"
+          system "#{compiler}#{optimization} steuerung.c daxpy.o empty.o wall_time.c > /dev/null 2>&1"
           values = []
           10.times do |i|
             print "#{i} "
