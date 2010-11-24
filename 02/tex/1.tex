@@ -35,13 +35,13 @@ Zunächst wird der Einfluss der Vektorlänge studiert. Unabhängig vom Compiler,
 der Optimierungsstufe und von der Schrittlänge nimmt die Rechenleistung tendenziell
 ab, wenn man die Länge der Vektoren vergrößert. Dies geschieht meist sprunghaft,
 also nicht kontinuierlich. Dafür gibt es mehrere Ursachen. Zum einen kann beobachtet
-werden, dass es (zum Beispiel in \textcolor{red}{gcc,o3}) zwischen $n=1e5$ und
-$n=1e6$ zu einem Leistungseinbruch um einen Faktor von ca. drei bis vier kommt.
+werden, dass es (zum Beispiel in \textcolor{red}{gcc,o3}) zwischen $n=\num{1e5}$ und
+$n=\num{1e6}$ zu einem Leistungseinbruch um einen Faktor von ca. drei bis vier kommt.
 Dies lässt sich über die Speichergrößen der beteiligten Vektoren begründen. Wenn 
-man zwei Vektoren betrachtet, die die Länge $1e6$ besitzen und mit Zahlen vom Typ
+man zwei Vektoren betrachtet, die die Länge \num{1e6} besitzen und mit Zahlen vom Typ
 \texttt{double} gefüllt sind, so berechnet sich die benötigte Größe zu insgesamt
-$$2\cdot 64\cdot 1e6 \mbox{~bit}\approx 15.3\mbox{~MB}$$. Die Größe des Caches 
-beträgt 6 MB, sodass ab etwa einer Vektorlänge von schätzungsweise $0.5e6$ die 
+$2\cdot \num{64e6}\mbox{~bit}\approx \SI{15.3}{\mega\byte}$. Die Größe des Caches 
+beträgt \SI{6}{\mega\byte}, sodass ab etwa einer Vektorlänge von schätzungsweise \num{0.5e6}     die 
 Vektoren nicht mehr in den Cache passen. Daher ist das Betriebssystem gezwungen,
 die Daten aus dem Arbeitsspeicher zu laden, was deutlich langsamer ist als das Laden
 aus dem Cache.
