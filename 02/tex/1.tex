@@ -30,7 +30,13 @@ gezeigt.
 
 
 \section{Auswertung}
-
+\subsection{Einfluss der Vektorlänge $n$}
+Zunächst wird der Einfluss der Vektorlänge studiert. Unabhängig vom Compiler, von
+der Optimierungsstufe und von der Schrittlänge nimmt die Rechenleistung tendenziell
+ab, wenn man die Länge der Vektoren vergrößert. Dies geschieht meist sprunghaft,
+also nicht kontinuierlich. Dafür gibt es mehrere Ursachen. Zum einen kann beobachtet
+werden, dass es (zum Beispiel in \textcolor{red}{gcc,o3}) irgendwo zwischen $n=1e5$ 
+und $n=1e6$ 
 
 % - gcc_o:	max. leistung: ca. 360
 % 		anfang: alles ähnlich, 100 kaum aussagekräftig, ab 1e6: stride > 1 deutlich schlechter als stride = 1, größerer stride -> schlechterer wert, stimmt für 16 bis 64 überein
