@@ -1,9 +1,35 @@
-\section{Einleitung}
+\section{Vorbetrachtungen}
 In diesem Projekt sollte untersucht werden, wie die Rechenleistung der Computer
 im PC-Pool des Instituts für Physik der Humboldt-Universität zu Berlin von
 verschiedenen Parametern abhängt. Als Benchmark-Methode wurde \texttt{daxpy}
-verwendet. 
+verwendet. Dabei handelt es sich um ein Verfahren, das aus zwei Vektoren in einer \for-Schleife
+komponentenweise eine Summe bildet, wobei an einen der beiden Werte eine
+beliebige Zahl multipliziert wird. Somit treten für jede Komponente zwei
+Operationen auf, eine Addition und eine Multiplikation. Die Daten sind hierbei 
+unabhängig voneinander.
 
+Die Prozessoren sind Intel-Quadcore-CPUs des Typs „Q9450.“ Das Betriebssystem ist
+ein 64bit-System.
+
+Die Parameter, von denen die Rechenleistung abhängt und die daraufhin untersucht
+wurden, sind zum einen die Vektorlänge, zum anderen die Schrittlänge („Stride“),
+mit der die \for-Schleife durchschritten wird,
+sowie auch die konkrete Wahl des Compilers und der Optimierung durch die 
+Compiler. Die Vektorlänge wurde von 100 bis $10^7$ variiert, die Schrittlänge 
+von 1 bis 64. Die verwendeten Compiler sind der \gcc, der \icc sowie der \pgcc.
+Weiterhin wurde das Optimierungslevel verändert, mit dem die Compiler den Code 
+überprüfen und optimieren. Wenn man beim kompilieren keinen Parameter übergibt, 
+werden die Standardeinstellungen des jeweiligen Compilers verwendet, bei der
+Verwendung des Parameters \texttt{-o0} sollte keinerlei Optimierung durchgefürt
+werden, bei einem Parameter \texttt{-o3} hingegen sollte der Code für die
+Ausführung in der Art angepasst werden, dass das Programm schnell läuft.
+
+Im Folgenden werden die sich ergebenden Plots sowie der Quelltext unserer Programme
+gezeigt.
+
+
+
+\section{Auswertung}
 
 
 % - gcc_o:	max. leistung: ca. 360
