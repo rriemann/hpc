@@ -1,20 +1,62 @@
-- gcc_o:	max. leistung: ca. 360
-		anfang: alles ähnlich, 100 kaum aussagekräftig, ab 1e6: stride > 1 deutlich schlechter als stride = 1, größerer stride -> schlechterer wert, stimmt für 16 bis 64 überein
-- gcc_o0:	= _o
-- gcc_o3:	rechenleistung bis faktor 3 besser (auf max. 1300), ab n=1e4: wieder deutlicher einfluss von stride!=1, erniedrigung 
-		um ca. 200, bis min. 400, ab n=1e6: wie _o0
-		erste stufe: n=1e3 entspricht 7.8kByte, cache size: 6144kB -> ab n=1e6 passt der vektor nicht mehr in den cache, clflush size: 64, cache_alignment: 64
-		stride 1 -> viele sinnvolle daten in cache -> ideales nachladen
+\section{Vorbetrachtungen}
+In diesem Projekt sollte untersucht werden, wie die Rechenleistung der Computer
+im PC-Pool des Instituts für Physik der Humboldt-Universität zu Berlin von
+verschiedenen Parametern abhängt. Als Benchmark-Methode wurde \texttt{daxpy}
+verwendet. Dabei handelt es sich um ein Verfahren, das aus zwei Vektoren in einer \for-Schleife
+komponentenweise eine Summe bildet, wobei an einen der beiden Werte eine
+beliebige Zahl multipliziert wird. Somit treten für jede Komponente zwei
+Operationen auf, eine Addition und eine Multiplikation. Die Daten sind hierbei 
+unabhängig voneinander.
+
+Die Prozessoren sind Intel-Quadcore-CPUs des Typs „Q9450.“ Das Betriebssystem ist
+ein 64bit-System.
+
+Die Parameter, von denen die Rechenleistung abhängt und die daraufhin untersucht
+wurden, sind zum einen die Vektorlänge, zum anderen die Schrittlänge („Stride“),
+mit der die \for-Schleife durchschritten wird,
+sowie auch die konkrete Wahl des Compilers und der Optimierung durch die 
+Compiler. Die Vektorlänge wurde von 100 bis $10^7$ variiert, die Schrittlänge 
+von 1 bis 64. Die verwendeten Compiler sind der \gcc, der \icc sowie der \pgcc.
+Weiterhin wurde das Optimierungslevel verändert, mit dem die Compiler den Code 
+überprüfen und optimieren. Wenn man beim kompilieren keinen Parameter übergibt, 
+werden die Standardeinstellungen des jeweiligen Compilers verwendet, bei der
+Verwendung des Parameters \texttt{-o0} sollte keinerlei Optimierung durchgefürt
+werden, bei einem Parameter \texttt{-o3} hingegen sollte der Code für die
+Ausführung in der Art angepasst werden, dass das Programm schnell läuft.
+
+Im Folgenden werden die sich ergebenden Plots sowie der Quelltext unserer Programme
+gezeigt.
 
 
 
+\section{Auswertung}
 
 
-
-
-
-vektorlänge n, double-größe: 8byte->64bit
-for entspricht if -> pipeline läuft leer, cache+register evtl neu laden
-
-es müssen zwei vektoren reinpassen, man kann den genauen punkt hier nicht sehen
-annahme : compiler vektorisieren eigenständig (bei o3), was hier gut möglich ist (keine abhängigkeiten)
+% - gcc_o:	max. leistung: ca. 360
+% 		anfang: alles ähnlich, 100 kaum aussagekräftig, ab 1e6: stride > 1 deutlich schlechter als stride = 1, größerer stride -> schlechterer wert, stimmt für 16 bis 64 überein
+% - gcc_o0:	= _o
+% - gcc_o3:	rechenleistung bis faktor 3 besser (auf max. 1300), ab n=1e4: wieder deutlicher einfluss von stride!=1, erniedrigung 
+% 		um ca. 200, bis min. 400, ab n=1e6: wie _o0
+% 		erste stufe: n=1e3 entspricht 7.8kByte, cache size: 6144kB -> ab n=1e6 passt der vektor nicht mehr in den cache -> paging(?), clflush size: 64, cache_alignment: 64
+% 		stride 1 -> viele sinnvolle daten in cache -> ideales nachladen
+% 		erste stufe: schritt so groß, dass das geladene stück des vektors nur für eine zahl genutzt werden kann -> register komplett neu füllen -> man sieht hier die beschränkung durch bandbreite zwischen cache und register + pipeline-leerlauf; register: 64bit -> kann nicht der grund sein!! dann könnte die erste stufe die beschränkung durch l1 sein, je größer die schrittweite ist, desto mehr muss von l2 in l1 geladen werden. daher könnte es zu den stride-abhängigen stufen kommen
+% 
+% - stride 1, o3:	alle compiler etwa gleich gut
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% 
+% vektorlänge n, double-größe: 8byte->64bit
+% for entspricht if -> pipeline läuft leer, cache+register evtl neu laden
+% 
+% es müssen zwei vektoren reinpassen, man kann den genauen punkt hier nicht sehen
+% annahme : compiler vektorisieren eigenständig (bei o3), was hier gut möglich ist (keine abhängigkeiten)
+% 
+% pgcc optimiert trotz o0-anweisung
+% 
+% 
+% fehler in berechnung der rechenleistung: reale zeit, keine cpu-zeit
