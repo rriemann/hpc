@@ -2,13 +2,13 @@
 # include <stdlib.h>
 
 double wall_time(void);
-double daxpy(double x[], double y[], int n, int step);
+void daxpy(double x[], double y[], int n, int step);
 void empty(void);
 
 int main(int argc, char *argv[])
 {
     int i, j, n, r, step;
-    double s, time, ttime, *x, *y;
+    double time, ttime, *x, *y;
 
     n = atoi(argv[1]);
     r = atoi(argv[2]);
@@ -29,11 +29,10 @@ int main(int argc, char *argv[])
 
     time = wall_time();
     for (j = 0; j < r; j++) {
-        s = daxpy(x, y, n, step);
+        daxpy(x, y, n, step);
     }
     time = wall_time() - time;
 
-    printf("Skalarprodukt  : %f\n", s);
     printf("Laufzeit       : %f s\n", time);
     printf("Overhead       : %g s\n", ttime);
     printf("Zeit pro Wdhlg : %g s\n", time / r);
