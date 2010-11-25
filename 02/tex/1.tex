@@ -93,14 +93,14 @@ L2- und L1-Cache handelt.
 % 
 % fehler in berechnung der rechenleistung: reale zeit, keine cpu-zeit
 
-\section{Vergleich der Compiler}
+\subsection{Vergleich der Compiler}
 Zur Durchführung der Tests wurden die Compiler
 \begin{itemize}
  \item \gcc Version 4.3.2 (Debian 4.3.2-1.1) 
  \item \pgcc Version 10.9-0 64-bit target on x86-64 Linux -tp penryn-64 
  \item \icc Version 11.1 20091012
 \end{itemize}
-verwendet. In \fref{s01_o0] und \fref{s64_o0} werden die Compiler miteinander
+verwendet. In \fref{s01_o0} und \fref{s64_o0} werden die Compiler miteinander
 verglichen. Der Compiler \pgcc scheint den anderen beiden Compilern überlegen
 zu sein. Doch lässt sich in \fref{step4_pgcc} erkennen, dass beim \pgcc den
 Optimierungsleveln andere Standardeinstellungen zu Grunde liegen, wodurch ein
@@ -120,3 +120,17 @@ Aus den Abbildungen \fref{step4_gcc} und \fref{step4_icc} kann entnommen werden,
 dass der \gcc standardmäßig keine Optimierungen aktiviert, während der \icc ähnlich
 wie der \pgcc bei nicht expliziet gegebenem Optimierungslevel automatisch Optimierungen
 durchführt.
+
+\section{Fazit}
+
+Mit den im Rahmen dieses Versuches untersuchten Tests kann noch einmal die
+Wichtigkeit der geschickten Datenzugriffe unterstrichen werden. Liegen die Daten
+ungünstig im Speicher, kann die Leistung leicht um den Faktor 10 sinken.
+In den hier aufgezeigten Extremen sank die Leistung teils sogar noch stärker.
+
+In einer Produktivumgebung ist es weiterhin wichtig, sich über die verwendeten
+Compileroptimierungen bewusst zu sein. Durch das automatisierte Enfalten von
+Schleifen, das Auslasten aller vorhandenen Pipelines sowie eine optimierte
+Speicherverwendung kann teils auch vollautomatisch ein beträchtlicher Geschwindigkeitsvorteil
+erreicht werden. Der hier verwendete Code lief in seiner optimierten Form ungefähr
+dreimal so schnell.
