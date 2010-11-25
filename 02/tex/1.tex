@@ -112,3 +112,31 @@ effektivsten verwendet werden.
 % 
 % 
 % fehler in berechnung der rechenleistung: reale zeit, keine cpu-zeit
+
+\section{Vergleich der Compiler}
+Zur Durchführung der Tests wurden die Compiler
+\begin{itemize}
+ \item \gcc Version 4.3.2 (Debian 4.3.2-1.1) 
+ \item \pgcc Version 10.9-0 64-bit target on x86-64 Linux -tp penryn-64 
+ \item \icc Version 11.1 20091012
+\end{itemize}
+verwendet. In \fref{s01_o0] und \fref{s64_o0} werden die Compiler miteinander
+verglichen. Der Compiler \pgcc scheint den anderen beiden Compilern überlegen
+zu sein. Doch lässt sich in \fref{step4_pgcc} erkennen, dass beim \pgcc den
+Optimierungsleveln andere Standardeinstellungen zu Grunde liegen, wodurch ein
+aussagekräftiger Vergleich an dieser Stelle nicht möglich wird. \icc und \gcc
+liefern ansonsten ungefähr die gleiche Leistung. Bei sehr hohen Vektorlängen
+von \num{1e6} und höher versagt die Optimierung des \pgcc, so dass alle Compiler
+eine gleiche Leistung ermöglichen.
+
+Interessant ist in \fref{s64_o0}, dass ab einer Vektorlänge von \num{1e2} die
+Leistung zunächst steigt. Dies ist womöglich jedoch der ungenügenden Implementierung
+des Tests zuzuschreiben. Der Vektor mit Länge 100 wird bei einem Stride von 64
+lediglich durch eine Iteration durchlaufen, wodurch die konditionalen Ausdrücke,
+Unterprogrammaufrufe, usw. größeren Einfluss haben. Diese Faktoren führen letztlich
+zu einer Abnahme der Rechenleistung.
+
+Aus den Abbildungen \fref{step4_gcc} und \fref{step4_icc} kann entnommen werden,
+dass der \gcc standardmäßig keine Optimierungen aktiviert, während der \icc ähnlich
+wie der \pgcc bei nicht expliziet gegebenem Optimierungslevel automatisch Optimierungen
+durchführt.
