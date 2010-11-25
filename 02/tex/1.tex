@@ -6,7 +6,8 @@ verwendet. Dabei handelt es sich um ein Verfahren, das aus zwei Vektoren in eine
 komponentenweise eine Summe bildet, wobei an einen der beiden Werte eine
 beliebige Zahl multipliziert wird. Somit treten für jede Komponente zwei
 Operationen auf, eine Addition und eine Multiplikation. Die Daten sind hierbei 
-unabhängig voneinander.
+unabhängig voneinander. Die Rechnungen wurden teils mehrfach wiederholt und
+gemittelt.
 
 Die Prozessoren sind Intel-Quadcore-CPUs des Typs „Q9450.“ Das Betriebssystem ist
 ein 64bit-System.
@@ -24,7 +25,7 @@ Verwendung des Parameters \texttt{-o0} sollte keinerlei Optimierung durchgefürt
 werden, bei einem Parameter \texttt{-o3} hingegen sollte der Code für die
 Ausführung in der Art angepasst werden, dass das Programm schnell läuft.
 
-Im Folgenden werden die sich ergebenden Plots sowie der Quelltext unserer Programme
+Die sich ergebenden Plots sowie der Quelltext unserer Programme werden in 
 gezeigt.
 
 
@@ -41,10 +42,11 @@ Dies lässt sich über die Speichergrößen der beteiligten Vektoren begründen.
 man zwei Vektoren betrachtet, die die Länge \num{1e6} besitzen und mit Zahlen vom Typ
 \texttt{double} gefüllt sind, so berechnet sich die benötigte Größe zu insgesamt
 $2\cdot \num{64e6}\mbox{~bit}\approx \SI{15.3}{\mega\byte}$. Die Größe des Caches 
-beträgt \SI{6}{\mega\byte}, sodass ab etwa einer Vektorlänge von schätzungsweise \num{0.5e6}     die 
+beträgt \SI{6}{\mega\byte}, sodass ab etwa einer Vektorlänge von schätzungsweise \num{0.5e6} die 
 Vektoren nicht mehr in den Cache passen. Daher ist das Betriebssystem gezwungen,
 die Daten aus dem Arbeitsspeicher zu laden, was deutlich langsamer ist als das Laden
 aus dem Cache. Für noch größere Längen bleibt die Leistung auf dem gleichen Niveau.
+
 Man kann für die meisten Plots einen weiteren Leistungseinbruch beobachten, dieses
 mal zwischen $n=1000$ und $n=10000$. Dies lässt sich dadurch begründen, dass neben
 dem Level-2-Cache (L2-Cache) ein kleinerer Level-1-Cache (L1-Cache) existiert, zu
@@ -55,10 +57,28 @@ Kilobyte bis einige hundert Kilobyte) und daher nur wesentlich kleinere Teile de
 Vektoren in diesen Cache passen und bei einer größeren Schrittweite öfter nachgeladen
 werden muss. Dies kann zu dem beobachteten Effekt führen. Um die Größenordnung des
 L1-Caches zu verifizieren, wird kurz überschlagen, welchem Speicherbedarf die
-genannten Vektorlängen entsprechen: $$2\cdot64\cdot \SI{1e4}{\bit} \approx 
-\SI{156}{\kibi\byte},$$ was mit den Erwartungen übereinstimmt. Es ist also sehr
+genannten Vektorlängen entsprechen: $2\cdot\SI{64e4}{\bit} \approx 
+\SI{156}{\kibi\byte}$, was mit den Erwartungen übereinstimmt. Es ist also sehr
 wahrscheinlich, dass es sich bei diesem Einbruch um einen Bandbreiteneffekt zwischen
 L2- und L1-Cache handelt.
+
+Für kleine Vektorlängen wird in die maximale Leistung erreicht, die zwischen 1300
+und \SI{1400}{MFlops} liegt (je nach Compiler). Hier die theoretisch maximal mögliche 
+Leistung wird auch hier nicht erreicht, da auch hier, selbst im Falle kleiner 
+Schrittlängen, der L1-Cache oft aktualisiert werden muss, was die Leistung erniedrigt.
+
+Weiterhin soll angemerkt werden, dass die Ergebnisse bei $n=100$ nicht sehr
+aussagekräftig sind, speziell für große Schrittlängen, da hier sehr wenige Rechenschritte
+durchgefürt werden. Hierbei kann es zu starken Schwankungen kommen, sodass sich in
+der weiteren Auswertung auf größere Längen konzentriert wird.
+
+
+\subsection{Einfluss der Schrittweite}
+An dieser Stelle soll der Einfluss des Strides genauer untersucht werden. Wie bereits
+festgestellt werden konnte, sind kleine Schrittlängen vorteilhaft (z.B. \fref{gcc_o3}
+oder \fref{pgcc_o}), da die in die verschiedenen Cache-Level geladenen Daten am
+effektivsten verwendet werden.
+
 
 
 
