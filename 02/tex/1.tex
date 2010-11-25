@@ -101,7 +101,9 @@ Für noch größere Vektorlängen ($n\ge \num{e6}$) dominiert das Nachladen aus 
 Arbeitsspeicher die Leistung, Doch auch hier liegen die zum Stride eins (und teilweise
 auch zwei) gehörenden Kurven über den anderen. Dies lässt sich wiederum durch die bessere
 Nutzung der Daten erklären, da für kleine Schrittweiten seltener aus dem Arbeitsspeicher
-nachgeladen werden muss. Für größere Schrittlängen verschwindet dieser Effekt.
+nachgeladen werden muss. Für größere Schrittlängen verschwindet dieser Effekt. Die
+insgesamt niedrigste erreichte Leistung liegt bei einem Stride von 64 bei ca.
+\SI{30}{MFlops} und somit bei knapp einem 40stel der besten erreichten Leistung.
 
 
 
@@ -177,3 +179,11 @@ Schleifen, das Auslasten aller vorhandenen Pipelines sowie eine optimierte
 Speicherverwendung kann teils auch vollautomatisch ein beträchtlicher Geschwindigkeitsvorteil
 erreicht werden. Der hier verwendete Code lief in seiner optimierten Form ungefähr
 dreimal so schnell.
+
+Schließlich ist zu erwähnen, dass die Leistungsmessungen nicht exakt waren. Um die
+Messungen zu verbessern, könnte statt der real verstrichenen Zeit die
+benötigte CPU-Zeit zur Berechnung verwendet werden. Weiterhin
+wurde vorausgesetzt, dass die Prozessor-Register keinen zusätzlichen Einfluss auf 
+die Leistung haben. Außerdem wurde in der Berechnung der Leistung vernachlässigt,
+dass andere Operationen, wie beispielsweise Funktionsaufrufe, ebenfalls viel Zeit
+kosten können. Diese wurden aber in der Berechnung nicht berücksichtigt.
