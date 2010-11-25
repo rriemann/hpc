@@ -66,6 +66,10 @@ Für kleine Vektorlängen wird in die maximale Leistung erreicht, die zwischen 1
 und \SI{1400}{MFlops} liegt (je nach Compiler). Hier die theoretisch maximal mögliche 
 Leistung wird auch hier nicht erreicht, da auch hier, selbst im Falle kleiner 
 Schrittlängen, der L1-Cache oft aktualisiert werden muss, was die Leistung erniedrigt.
+Weitere Begrenzung können daraus resultieren, dass nach jeder \for-Schleife eine 
+Art \texttt{if}-Abfrage durchgefürt wird, ob die Schleife weiter ausgeführt werden
+soll. An solchen Stellen kann es vorkommen, dass die Pipeline in der CPU leerläuft,
+was ebenfalls zu Geschwindigkeitseinbußen führen kann.
 
 Weiterhin soll angemerkt werden, dass die Ergebnisse bei $n=100$ nicht sehr
 aussagekräftig sind, speziell für große Schrittlängen, da hier sehr wenige Rechenschritte
@@ -77,8 +81,27 @@ der weiteren Auswertung auf größere Längen konzentriert wird.
 An dieser Stelle soll der Einfluss des Strides genauer untersucht werden. Wie bereits
 festgestellt werden konnte, sind kleine Schrittlängen vorteilhaft (z.B. \fref{gcc_o3}
 oder \fref{pgcc_o}), da die in die verschiedenen Cache-Level geladenen Daten am
-effektivsten verwendet werden.
+effektivsten verwendet werden. Allerdings ist dieser Effekt vom verwendeten Compiler
+abhängig und auch von der Optimierungsstufe, was im nächsten Kapitel besprochen wird.
+Bei der Optimierungsoption \texttt{-o3} treten bei allen Compilern große Unterschiede
+zwischen den zu den verschiedenen Strides gehörenden Kurven auf. Daher soll hier kurz 
+der Grund für die zum Teil starke Abhängigkeit erläutert werden.
 
+Bei kleinen Vektoren könnte es sein, dass die Compiler die Schleifen gut parallelisieren
+(beispielsweise über das sogenannte „Entrollen“) und somit die Pipeline nie
+leerläuft, was somit unabhängig von der Schrittweite zu guten Leistungen führt. Bei
+größeren Vektoren ($n\ge\num{e4}$) kommt der Effekt des öfteren Nachladens vom L2- in
+den L1-Cache zum tragen, was dazu führt, dass die Schrittweiten zwei, vier und acht 
+das Programm sukzessive langsamer werden lassen. Bei noch größeren Strides aber bleibt
+die Leistung konstant, was so zu verstehen ist, dass für jeden neuen Schleifendurchlauf
+neue Daten geladen werden müssen. Hier ist also die Datenmenge, die in eine Cachezeile 
+passt, so groß, dass maximal 16 \texttt{double}-Zahlen darin Platz finden.
+
+Für noch größere Vektorlängen ($n\ge \num{e6}$) dominiert das Nachladen aus dem
+Arbeitsspeicher die Leistung, Doch auch hier liegen die zum Stride eins (und teilweise
+auch zwei) gehörenden Kurven über den anderen. Dies lässt sich wiederum durch die bessere
+Nutzung der Daten erklären, da für kleine Schrittweiten seltener aus dem Arbeitsspeicher
+nachgeladen werden muss. Für größere Schrittlängen verschwindet dieser Effekt.
 
 
 
@@ -120,7 +143,7 @@ Zur Durchführung der Tests wurden die Compiler
  \item \pgcc Version 10.9-0 64-bit target on x86-64 Linux -tp penryn-64 
  \item \icc Version 11.1 20091012
 \end{itemize}
-verwendet. In \fref{s01_o0] und \fref{s64_o0} werden die Compiler miteinander
+verwendet. In \fref{s01_o0} und \fref{s64_o0} werden die Compiler miteinander
 verglichen. Der Compiler \pgcc scheint den anderen beiden Compilern überlegen
 zu sein. Doch lässt sich in \fref{step4_pgcc} erkennen, dass beim \pgcc den
 Optimierungsleveln andere Standardeinstellungen zu Grunde liegen, wodurch ein
@@ -138,5 +161,5 @@ zu einer Abnahme der Rechenleistung.
 
 Aus den Abbildungen \fref{step4_gcc} und \fref{step4_icc} kann entnommen werden,
 dass der \gcc standardmäßig keine Optimierungen aktiviert, während der \icc ähnlich
-wie der \pgcc bei nicht expliziet gegebenem Optimierungslevel automatisch Optimierungen
+wie der \pgcc bei nicht explizit gegebenem Optimierungslevel automatisch Optimierungen
 durchführt.
