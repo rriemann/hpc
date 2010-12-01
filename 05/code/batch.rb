@@ -16,19 +16,18 @@ class Array
 end
 
 
-repitions = { 5 => 2, 6 => 1, 7 => 0 }
-repitions.default = 3
+repitions = 3
 
 File.open('../data/data.dat', 'w') do |file|
   file.puts "#N S gcc gcc(0) gcc(3) icc icc(0) icc(3) pgcc pgcc(0) pgcc(3)"
-  (2..7).each do |n|
-    nn = 10**n
-    (0..6).each do |s|
-      ss = 2**s
+#   (2..7).each do |n|
+    nn = 10**7
+#     (0..6).each do |s|
+      ss = 1
       line = "#{nn} #{ss}"
       ['gcc', 'icc', 'pgcc'].each do |compiler|
         ['', ' -O0', ' -O3'].each do |optimization|
-          r = 10**repitions[n]
+          r = 100
           puts "\ncurrent config: #{compiler}#{optimization} N=#{nn} S=#{ss} r=#{r}"
           system 'rm -f *.o a.out'
           system "#{compiler}#{optimization} -c daxpy.c empty.c > /dev/null 2>&1"
@@ -49,6 +48,6 @@ File.open('../data/data.dat', 'w') do |file|
         end
       end
       file.puts line
-    end
-  end
+#     end
+#   end
 end
