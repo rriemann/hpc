@@ -25,8 +25,8 @@ File.open('../data/data.dat', 'w') do |file|
 #     (0..6).each do |s|
       ss = 1
       line = "#{nn} #{ss}"
-      ['gcc', 'icc', 'pgcc'].each do |compiler|
-        ['', ' -O0', ' -O3'].each do |optimization|
+      ['mpicc'].each do |compiler|
+        [''].each do |optimization|
           r = 100
           puts "\ncurrent config: #{compiler}#{optimization} N=#{nn} S=#{ss} r=#{r}"
           system 'rm -f *.o a.out'
@@ -35,7 +35,7 @@ File.open('../data/data.dat', 'w') do |file|
           values = []
           10.times do |i|
             print "#{i} "
-            cmd = "./a.out #{nn} #{r} #{ss}"
+            cmd = "mpirun -n 4 a.out #{nn} #{r} #{ss}"
             out = `#{cmd}`
             match = out.match(/Rechenleistung :\s+(.+)\s+MFlop\/s/)
             if match
