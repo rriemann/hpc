@@ -1,2 +1,2 @@
-#N S gcc gcc(0) gcc(3) icc icc(0) icc(3) pgcc pgcc(0) pgcc(3)
-10000000 1  140.0
+#N S mpicc 1 2 3 4
+10000000 1  330.6  280.9  221.7  139.7

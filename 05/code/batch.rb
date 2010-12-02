@@ -19,35 +19,31 @@ end
 repitions = 3
 
 File.open('../data/data.dat', 'w') do |file|
-  file.puts "#N S gcc gcc(0) gcc(3) icc icc(0) icc(3) pgcc pgcc(0) pgcc(3)"
-#   (2..7).each do |n|
+  file.puts "#N S mpicc 1 2 3 4"
     nn = 10**7
-#     (0..6).each do |s|
       ss = 1
       line = "#{nn} #{ss}"
-      ['mpicc'].each do |compiler|
-        [''].each do |optimization|
-          r = 100
-          puts "\ncurrent config: #{compiler}#{optimization} N=#{nn} S=#{ss} r=#{r}"
-          system 'rm -f *.o a.out'
-          system "#{compiler}#{optimization} -c daxpy.c empty.c > /dev/null 2>&1"
-          system "#{compiler}#{optimization} steuerung.c daxpy.o empty.o wall_time.c > /dev/null 2>&1"
-          values = []
-          10.times do |i|
-            print "#{i} "
-            cmd = "mpirun -n 4 a.out #{nn} #{r} #{ss}"
-            out = `#{cmd}`
-            match = out.match(/Rechenleistung :\s+(.+)\s+MFlop\/s/)
-            if match
-              values << match[1].to_f
-            else
-              $stderr.puts "Fehler bei #{cmd}"
-            end
+      compiler = 'mpicc'
+      system 'rm -f *.o a.out'
+      system "#{compiler} -c daxpy.c empty.c > /dev/null 2>&1"
+      system "#{compiler} steuerung.c daxpy.o empty.o wall_time.c > /dev/null 2>&1"
+
+      (1..4).each do |nprocesses|
+        r = 100
+        puts "\ncurrent config: #{compiler} N=#{nn} S=#{ss} r=#{r} Nprocesses=#{nprocesses}"
+        values = []
+        10.times do |i|
+          print "#{i} "
+          cmd = "mpirun -n #{nprocesses} a.out #{nn} #{r} #{ss}"
+          out = `#{cmd}`
+          match = out.match(/Rechenleistung :\s+(.+)\s+MFlop\/s/)
+          if match
+            values << match[1].to_f
+          else
+            $stderr.puts "Fehler bei #{cmd}"
           end
-          line += " %6.1f" % values.median if values.any?
         end
+        line += " %6.1f" % values.median if values.any?
       end
       file.puts line
-#     end
-#   end
 end
