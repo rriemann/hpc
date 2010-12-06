@@ -4,9 +4,9 @@
 
 void master();
 void slave();
-const int length[] = {1, 10, 100, 1000, 10000, 100000}; //, 1000000};
+const int length[] = {1, 10, 100, 1000, 10000, 100000, 1000000};
 const int arrlength = sizeof(length)/sizeof(length[0]);
-char *msg;
+char *msg, *msg2;
 int rank;
 MPI_Status status;
 
@@ -34,17 +34,19 @@ void master()
   for (i = 0; i < arrlength; i++){
 //     printf("vor malloc\n");
     msg = (char *)malloc(length[i]);
+    msg2 = (char *)malloc(length[i]*20);
 //     printf("nach malloc\n");
     for (wiederholungen = 0; wiederholungen < 1000; wiederholungen++){
       printf("rank %d, %d, %d\n", rank, i, wiederholungen);
 //       memset(msg, 0x0,length[i]);
       MPI_Send(msg, length[i], MPI_CHAR, 1, 0, MPI_COMM_WORLD);
 //       printf("vor rec\n");
-      MPI_Recv(msg, length[i], MPI_CHAR, 1, 0, MPI_COMM_WORLD, &status);
+      MPI_Recv(msg2, length[i], MPI_CHAR, 1, 0, MPI_COMM_WORLD, &status);
 //       printf("nach rec\n");
     }
 //     printf("vor free\n");
     free(msg);
+    free(msg2);
   }
 }
 
@@ -55,15 +57,17 @@ void slave()
   for(i = 0; i < arrlength; i++) {
 
     msg = (char *)malloc(length[i]);
+    msg2 = (char *)malloc(length[i]*20);
     for (wiederholungen = 0; wiederholungen < 1000; wiederholungen++){
       printf("rank %d, %d, %d\n", rank, i, wiederholungen);
 //       printf("vor rec\n");
-      MPI_Recv(msg, length[i], MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
+      MPI_Recv(msg2, length[i], MPI_INT, 0, 0, MPI_COMM_WORLD, &status);
 //       printf("nach rec\n");
 //       memset(msg, 0x0,length[i]);
       MPI_Send(msg, length[i], MPI_INT, 0, 0, MPI_COMM_WORLD);
 //       printf("nach send\n");
     }
     free(msg);
+    free(msg2);
   }
 }
