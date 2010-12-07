@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 
     if(rank%2 == 0) {
       time = wall_time() - time;
-      printf("%s: Zeit um %7d Bytes 2*%d mal zu übertragen: %g s\n",name, length[i], r_max, time / r_max);
+      printf("%s: Zeit um %7d Bytes 2mal zu übertragen: %g s\n",name, length[i], time / r_max);
     }
 
     free(msg);
