@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
   if(rank == 0) printf("size is %d\n", size);
   printf("%s: got rank %d\n",name, rank);
   sleep(1);
-
+  
   for (i = 0; i < arrlength; i++){
     msg = (char *)malloc(length[i]);
 
