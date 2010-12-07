@@ -29,7 +29,6 @@ int main(int argc, char *argv[])
   printf("%s: got rank %d\n",name, rank);
   sleep(1);
 
-  int nprocesses = MPI_Comm_size();
   FILE *file;
   file = fopen("../../data/data.dat","w");
   
