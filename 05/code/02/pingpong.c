@@ -22,6 +22,10 @@ int main(int argc, char *argv[])
   MPI_Get_processor_name(name,&len);
   printf("hie: %s\n",name);
 
+  int nprocesses = MPI_Comm_size();
+  FILE *file;
+  file = fopen("../../data/data.dat","w");
+  
   for (i = 0; i < arrlength; i++){
     msg = (char *)malloc(length[i]);
 
@@ -44,10 +48,12 @@ int main(int argc, char *argv[])
     if(rank == 0) {
       time = wall_time() - time;
       printf("Zeit um %7d Bytes 2*%d mal zu übertragen: %g s\n",length[i], r_max, time / r_max);
+      fprintf(file, "%d %g\n",length[i], time / r_max);
     }
 
     free(msg);
   }
+  fclose(file);
 
   MPI_Finalize();
 }
