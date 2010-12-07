@@ -14,14 +14,22 @@ int main(int argc, char *argv[])
   MPI_Status status;
   double time, ttime;
   char name[MPI_MAX_PROCESSOR_NAME];
-  int destination[4]; // maps: rank => destination of messages
 
   MPI_Init(&argc, &argv);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   MPI_Comm_size(MPI_COMM_WORLD, &size);
+  int destination[size]; // maps: rank => destination of messages
   MPI_Get_processor_name(name, &name_length);
 
-  if((size%2) != 0) {
+  if(size == 2) {
+    destination[0] = 1;
+    destination[1] = 0;
+  } else if(size == 4) {
+    destination[0] = 3;
+    destination[2] = 1;
+    destination[3] = 0;
+    destination[1] = 2;
+  } else {
     MPI_Abort(MPI_COMM_WORLD,0);
   }
 
@@ -40,11 +48,11 @@ int main(int argc, char *argv[])
     for (r = 0; r < r_max; r++){
       // printf("rank %d, %d, %d\n", rank, i, r);
       if(rank%2 == 0) {
-        MPI_Send(msg, length[i], MPI_CHAR, rank+1, 0, MPI_COMM_WORLD);
-        MPI_Recv(msg, length[i], MPI_CHAR, rank+1, 0, MPI_COMM_WORLD, &status);
+        MPI_Send(msg, length[i], MPI_CHAR, destination[rank], 0, MPI_COMM_WORLD);
+        MPI_Recv(msg, length[i], MPI_CHAR, destination[rank], 0, MPI_COMM_WORLD, &status);
       } else {
-        MPI_Recv(msg, length[i], MPI_CHAR, rank-1, 0, MPI_COMM_WORLD, &status);
-        MPI_Send(msg, length[i], MPI_CHAR, rank-1, 0, MPI_COMM_WORLD);
+        MPI_Recv(msg, length[i], MPI_CHAR, destination[rank], 0, MPI_COMM_WORLD, &status);
+        MPI_Send(msg, length[i], MPI_CHAR, destination[rank], 0, MPI_COMM_WORLD);
       }
     }
 
