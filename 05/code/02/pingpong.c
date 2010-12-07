@@ -10,17 +10,24 @@ int main(int argc, char *argv[])
   const int arrlength = sizeof(length)/sizeof(length[0]);
   const int r_max = 1000; // wiederholungen
   char *msg;
-  int rank, r, i;
+  int rank, r, i, name_length, size;
   MPI_Status status;
   double time, ttime;
+  char name[MPI_MAX_PROCESSOR_NAME];
+  int destination[4]; // maps: rank => destination of messages
 
   MPI_Init(&argc, &argv);
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+  MPI_Comm_size(MPI_COMM_WORLD, &size);
+  MPI_Get_processor_name(name, &name_length);
 
-  char name[MPI_MAX_PROCESSOR_NAME];
-  int len;
-  MPI_Get_processor_name(name,&len);
-  printf("hie: %s\n",name);
+  if((size%2) != 0) {
+    MPI_Abort(MPI_COMM_WORLD,0);
+  }
+
+  if(rank == 0) printf("size is %d\n", size);
+  printf("%s: got rank %d\n",name, rank);
+  sleep(1);
 
   int nprocesses = MPI_Comm_size();
   FILE *file;
@@ -29,25 +36,25 @@ int main(int argc, char *argv[])
   for (i = 0; i < arrlength; i++){
     msg = (char *)malloc(length[i]);
 
-    if(rank == 0) {
+    if(rank%2 == 0) {
       time = wall_time();
       time = wall_time();
     }
 
     for (r = 0; r < r_max; r++){
       // printf("rank %d, %d, %d\n", rank, i, r);
-      if(rank == 0) {
-        MPI_Send(msg, length[i], MPI_CHAR, 1, 0, MPI_COMM_WORLD);
-        MPI_Recv(msg, length[i], MPI_CHAR, 1, 0, MPI_COMM_WORLD, &status);
+      if(rank%2 == 0) {
+        MPI_Send(msg, length[i], MPI_CHAR, rank+1, 0, MPI_COMM_WORLD);
+        MPI_Recv(msg, length[i], MPI_CHAR, rank+1, 0, MPI_COMM_WORLD, &status);
       } else {
-        MPI_Recv(msg, length[i], MPI_CHAR, 0, 0, MPI_COMM_WORLD, &status);
-        MPI_Send(msg, length[i], MPI_CHAR, 0, 0, MPI_COMM_WORLD);
+        MPI_Recv(msg, length[i], MPI_CHAR, rank-1, 0, MPI_COMM_WORLD, &status);
+        MPI_Send(msg, length[i], MPI_CHAR, rank-1, 0, MPI_COMM_WORLD);
       }
     }
 
-    if(rank == 0) {
+    if(rank%2 == 0) {
       time = wall_time() - time;
-      printf("Zeit um %7d Bytes 2*%d mal zu übertragen: %g s\n",length[i], r_max, time / r_max);
+      printf("%s: Zeit um %7d Bytes 2*%d mal zu übertragen: %g s\n",name, length[i], r_max, time / r_max);
       fprintf(file, "%d %g\n",length[i], time / r_max);
     }
 
