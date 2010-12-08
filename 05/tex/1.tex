@@ -1,0 +1,16 @@
+\section*{Aufgabe 1}
+In dieser Aufgabe war das Programm \texttt{daxpy} aus dem ersten Projekt zu verwenden,
+um zu testen, welchen Einfluss die Zahl der insgesamt auf einem Knoten gestarteten
+Prozesse auf die Rechenleistung hat. Die für das Programm einzustellenden Parameter
+sind der Aufgabenstellung zu entnehmen. Der Quelltext für das Steuerungsprogramm
+ist in \lref{batch} und für das \texttt{daxpy}-Programm in \lref{daxpy} dargestellt.
+Die übrigen Dateien sind im Vergleich zum ersten Projekt nicht verändert worden
+und daher nicht erneut gezeigt.
+
+\lstinputlisting[label=lst:batch,caption={batch.rb}]{../code/01/batch.rb}
+\lstinputlisting[label=lst:daxpy,caption={daxpy.c}]{../code/01/daxpy.c}
+
+In \lref{batch} werden die einzustellenden Parameter festgelegt, abgesehen von
+der Zahl der Knoten, da der Standardwert für die Zahl der Knoten eins ist, sodass
+hierfür kein Parameter übergeben werden musste.
+

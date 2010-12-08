@@ -16,4 +16,4 @@ set ylabel "gemessene Zeiten in s"
 #set yrange [0:1400]
 
 set output "../../tmp/zeiten.pdf"
-plot "../../data/data.dat" using 1:2 pt 2 t "2 Prozesse, 1 Knoten", "" using 1:3 pt 147 t "2 Prozesse, 2 Knoten", "" using 1:4 pt 70 t "4 Prozesse, 1 Knoten", "" using 1:5 pt 71 t "4 Prozesse, 2 Knoten"
+plot "../../data/data2.dat" using 1:2 pt 2 t "2 Prozesse, 1 Knoten", "" using 1:3 pt 147 t "2 Prozesse, 2 Knoten", "" using 1:4 pt 70 t "4 Prozesse, 1 Knoten", "" using 1:5 pt 71 t "4 Prozesse, 2 Knoten"

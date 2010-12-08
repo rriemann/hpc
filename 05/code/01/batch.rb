@@ -18,14 +18,13 @@ end
 
 repitions = 3
 
-File.open('../data/data.dat', 'w') do |file|
+File.open('../data/data1.dat', 'w') do |file|
   file.puts "#N S mpicc 1 2 3 4"
   nn = 10**7
   ss = 1
   r = 100
   line = "#{nn} #{ss}"
   compiler = 'mpicc'
-#   system "#PBS -l nodes=1"                                          # TODO !!
   system 'rm -f *.o a.out'
   system "#{compiler} -c daxpy.c empty.c > /dev/null 2>&1"
   system "#{compiler} steuerung.c daxpy.o empty.o wall_time.c > /dev/null 2>&1"
