@@ -19,7 +19,7 @@ end
 repitions = 3
 
 File.open('../../data/data1.dat', 'w') do |file|
-  file.puts "#N S mpicc 1 2 3 4"
+  file.puts "#N S 1 2 3 4"
   nn = 10**7
   ss = 1
   r = 100
