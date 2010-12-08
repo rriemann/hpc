@@ -33,3 +33,30 @@ Knoten für kleine Längen (bis ca. $1000$ Zeichen) kaum einen Einfluss auf die
 benötigten Zeiten hat. Demnach ist hier eindeutig die Wahl des Kommunikationsweges
 das hemmende Element. Für größere Längen steigt die benötigte Zeit etwa nach einem 
 Potenzgesetz (sogar annähernd linear) an. 
+
+Auch die Zahl der Prozesse hat einen verschwindenden Einfluss, da vor allem bei der
+Verwendung von nur einem Knoten die gemessenen Zeiten für zwei und vier Prozesse
+übereinstimmen. Doch auch für zwei Knoten stimmen die Zeiten bis zu Nachrichtenlängen 
+von etwa $10000$ überein, danach ist die Übertragung für vier Prozesse um einen Faktor
+von etwa zwei langsamer als für zwei Prozesse. \textcolor{red}{wieder memory?}
+
+Die Latenzzeit für die Kommunikation zwischen zwei Knoten lässt sich aus den entsprechenden
+Kurven abschätzen. Für sehr kurze Längen spielt die zu übertragende Nachricht keine Rolle,
+der dominierende Zeitfaktor kommt hier durch die Latenz ins Spiel. Diese liegt demnach bei
+ca. $0.1$ Millisekunden für den Hin- und Rücktransport, also etwa bei $0.05$ Millisekunden
+für jedes einzelne Senden einer Nachricht.
+
+Auch wenn man nur auf einem Computer arbeitet, kann eine Latenzzeit gemessen werden.
+Diese ist aber mit ca. $0.5$ Mikrosekunden etwa zwei Größenordnungen geringer als die
+für die Kommunikation zwischen mehreren Knoten.
+
+Die Bandbreite lässt sich aus dem Anstieg bestimmen, der bei großen Nachrichtenlängen
+auftritt. Wenn man von den gemessenen Zeiten die Latenzzeit abzieht und dann die
+übermittelte Datenmenge durch die übrig gebliebene Zeit dividiert, so erhält man 
+die Bandbreite der Übertragung. Dies wurde für alle Nachrichtenlängen getan, woraus
+der Plot in \fref{bandbreite} resultiert.
+
+
+
+Für alle Messungen muss beachtet werden, dass die Ergebnisse von der aktuellen Auslastung
+der verwendeten Knoten abhängen können und somit nur als Näherung gelten können.
