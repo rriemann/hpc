@@ -60,9 +60,16 @@ der Plot in \fref{bandbreite} resultiert.
   \centering
   \includegraphics[width=0.8\columnwidth,keepaspectratio]{../tmp/bandbreite}
   \caption{Gemessene Bandbreite für das Senden einer Nachricht von einem Prozess zum
-  anderen und zurück in MByte pro Sekunde in Abhängigkeit von der Nachrichtenlänge}
+  anderen in MByte pro Sekunde in Abhängigkeit von der Nachrichtenlänge}
   \label{fig:bandbreite}
 \end{figure}
 
+Die Bandbreite für die Kommunikation zwischen mehreren Knoten liegt also bei etwa 
+100 MByte pro Sekunde, was in etwa der möglichen Geschwindigkeit in einem LAN entspricht (eine
+übliche Größe ist  ein GBit pro Sekunde). Für die Kommunikation innerhalb eines Knoten 
+erreicht die Bandbreite Werte von ca. acht Gigabyte pro Sekunde. Auch dies ist ein
+realistischer Wert für die Kommunikation zwischen Komponenten innerhalb eines Computers.
+
 Für alle Messungen muss beachtet werden, dass die Ergebnisse von der aktuellen Auslastung
-der verwendeten Knoten abhängen können und somit nur als Näherung gelten können.
+der verwendeten Knoten abhängen können und somit nur als Näherung gelten können. Für 
+unsere Messungen haben wir Knoten gewählt, auf denen keine weiteren Nutzer angemeldet waren.
