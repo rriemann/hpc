@@ -14,7 +14,7 @@ In \lref{batch} werden die einzustellenden Parameter festgelegt, abgesehen von
 der Zahl der Knoten, da der Standardwert für die Zahl der Knoten eins ist, sodass
 hierfür kein Parameter übergeben werden musste.
 
-Die Dabei erzielte Rechenleistung ist in \lref{rechenleistung} dargestellt.
+Die Dabei erzielte Rechenleistung in MFlops pro Sekunde ist in \lref{rechenleistung} dargestellt.
 
 \lstinputlisting[label=lst:rechenleistung,caption={data1.dat}]{../data/data1.dat}
 
@@ -22,4 +22,8 @@ Wie man erkennen kann, nimmt die Rechenleistung kontinuierlich ab, je mehr Proze
 gestartet werden. Für vier Prozesse beträgt die Leistung nur noch ungefähr die
 Hälfte der Leistung bei einem einzelnen Prozess.
 
-\textcolor{red}{grund: shared memory?}
+Ein Grund für die Geschwindigkeitsabnahme wird sein, dass jeder einzelne Prozess
+Speicher im RAM reserviert und somit für jeden Prozess gelegentlich Daten aus diesem
+in den Cache und zum Prozessor geladen werden. Üblicherweise wird der Cache von
+mehreren Cores gemeinsam genutzt, sodass dies wirklich eine Ursache für die Abnahme
+der Rechenleistung sein kann.
