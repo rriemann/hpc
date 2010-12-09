@@ -5,7 +5,7 @@ Konfigurationen von beteiligten Prozessoren und Zahlen von Prozessen die Zeit ge
 die benötigt wird, um eine Nachricht variabler Länge von einem Prozess zum anderen
 und zurück zu senden. Dabei wurde dieser Ablauf $1000$ mal wiederholt und die 
 gemessene Zeit gemittelt. Der Quelltext dafür ist in \lref{pingpong} dargestellt.
-Die darin aufgerufene Funktion \texttt{wall_time()} ist die aus der Vorlesung bekannte.
+Die darin aufgerufene Funktion \texttt{wall\_time()} ist die aus der Vorlesung bekannte.
 
 \lstinputlisting[label=lst:pingpong,caption={pingpong.c}]{../code/02/pingpong.c}
 % \lstinputlisting[label=lst:walltime,caption={wall\_time.c}]{../code/02/wall_time.c}
@@ -38,9 +38,7 @@ Auch die Zahl der Prozesse hat einen verschwindenden Einfluss, da vor allem bei 
 Verwendung von nur einem Knoten die gemessenen Zeiten für zwei und vier Prozesse
 übereinstimmen. Doch auch für zwei Knoten stimmen die Zeiten bis zu Nachrichtenlängen 
 von etwa $10000$ überein, danach ist die Übertragung für vier Prozesse um einen Faktor
-von etwa zwei langsamer als für zwei Prozesse. Der Grund hierfür wird der gleiche
-sein wie der in Aufgabe 1) genannte, nämlich die Notwendigkeit des Betriebssystems,
-den einzelnen Prozessen Daten aus dem Arbeitsspeicher in den gemeinsamen Cache zu laden.
+von etwa zwei langsamer als für zwei Prozesse. \textcolor{red}{wieder memory?}
 
 Die Latenzzeit für die Kommunikation zwischen zwei Knoten lässt sich aus den entsprechenden
 Kurven abschätzen. Für sehr kurze Längen spielt die zu übertragende Nachricht keine Rolle,
