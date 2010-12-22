@@ -1,5 +1,4 @@
 # include <stdio.h>
-# include "mpi.h"
 # include "laplace.h"
 # include "decomp.h"
 
@@ -12,8 +11,11 @@ void laplace(int Nx, int Ny, double eps)
     field tmp;
     const int max_iter = 1000;
     int iter;
+    MPI_Op myop;
 
     init(vneu, valt, Nx, Ny);
+    
+    MPI_Op_create(gauss_sum, 1, &myop);
 
     for (iter = 1; iter <= max_iter; iter++) {
         tmp = vneu; 
@@ -21,7 +23,7 @@ void laplace(int Nx, int Ny, double eps)
         valt = tmp;
         jacobi(vneu, valt, Nx, Ny);
         /* jacobi9(vneu, valt, Nx, Ny); */
-        if (diff(vneu, valt, Nx, Ny) < eps) break;
+        if (diff(vneu, myop) < eps) break;
         exchange_boundary(vneu, Nx, Ny);
     }
 
