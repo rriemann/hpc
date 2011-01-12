@@ -15,7 +15,7 @@ void exchange_boundary(field v, int Lx, int Ly)
   MPI_Type_commit(&Row);
 
   MPI_Isend(&v[Ly][1],   1, Row, decomp.north, 0, MPI_COMM_WORLD, &req[0]);
-  MPI_Irecv(&v[Ly+1][1], 1, Row, decomp.north, 0, MPI_COMM_WORLD, &(*status));
+  MPI_Irecv(&v[Ly+1][1], 1, Row, decomp.north, 0, MPI_COMM_WORLD, &status[0]);
 
   MPI_Isend(&v[1][1], 1, Row, decomp.south, 0, MPI_COMM_WORLD, &req[1]);
   MPI_Irecv(&v[0][1], 1, Row, decomp.south, 0, MPI_COMM_WORLD, &status[1]);
