@@ -10,7 +10,7 @@ void coord2rank(int coord_x, int coord_y, int *rank)
       coord_y < 0 ||
       coord_x >= decomp.procs_x ||
       coord_y >= decomp.procs_y )
-    *rank = -1;
+    *rank =  MPI_PROC_NULL;
 
   else
     *rank = coord_x + coord_y * decomp.procs_x;
