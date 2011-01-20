@@ -19,8 +19,8 @@ void laplace(int Nx, int Ny, double eps)
         tmp = vneu; 
         vneu = valt; 
         valt = tmp;
-        jacobi(vneu, valt, Nx, Ny);
-        /* jacobi9(vneu, valt, Nx, Ny); */
+//         jacobi(vneu, valt, Nx, Ny);
+        jacobi9(vneu, valt, Nx, Ny);
         if (diff(vneu, valt, Nx, Ny) < eps) break;
         exchange_boundary(vneu, Nx, Ny);
     }
