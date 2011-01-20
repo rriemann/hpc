@@ -30,7 +30,7 @@ void exchange_boundary(field v, int Lx, int Ly)
   MPI_Isend(&v[1][1], 1, Column, decomp.west, 0, MPI_COMM_WORLD, &req[6]);
   MPI_Irecv(&v[1][0], 1, Column, decomp.west, 0, MPI_COMM_WORLD, &req[7]);
 
-  MPI_Waitall(4,req,status);
+  MPI_Waitall(8,req,status);
 
   MPI_Type_free(&Row);
   MPI_Type_free(&Column);
