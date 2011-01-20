@@ -14,9 +14,6 @@ void output_parallel(field v, int Lx, int Ly)
   MPI_Datatype Row;
   MPI_Type_contiguous(decomp.Lx, MPI_DOUBLE, &Row);
   MPI_Type_commit(&Row);
-//   MPI_Datatype Column;
-//   MPI_Type_vector(Ly, 1, Lx+2, MPI_DOUBLE, &Column);
-//   MPI_Type_commit(&Column);
 
   for (y = 0; y <= decomp.Ny + 1; y++) {
     for (x = 0; x <= decomp.Nx + 1; x++) {
@@ -51,12 +48,11 @@ void output_parallel(field v, int Lx, int Ly)
       }
     }
   }
-  
+
   if (decomp.my_rank == 0)
     output(vv, decomp.Nx, decomp.Ny);
 
   MPI_Type_free(&Row);
-//   MPI_Type_free(&Column);
 
   field_free(vv);
 }
