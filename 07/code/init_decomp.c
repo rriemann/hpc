@@ -27,4 +27,10 @@ void init_decomp(void)
   coord2rank(decomp.coord_x, decomp.coord_y - 1, &decomp.south);
   coord2rank(decomp.coord_x + 1, decomp.coord_y, &decomp.east);
   coord2rank(decomp.coord_x - 1, decomp.coord_y, &decomp.west);
+
+
+  coord2rank(decomp.coord_x + 1, decomp.coord_y+1, &decomp.northeast);
+  coord2rank(decomp.coord_x - 1, decomp.coord_y+1, &decomp.northwest);
+  coord2rank(decomp.coord_x + 1, decomp.coord_y-1, &decomp.southeast);
+  coord2rank(decomp.coord_x - 1, decomp.coord_y-1, &decomp.southwest);
 }

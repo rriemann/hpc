@@ -7,30 +7,39 @@ extern Decomp decomp;
 void exchange_boundary(field v, int Lx, int Ly)
 {
   int y;
-  MPI_Status status[8];
-  MPI_Request req[8];
+  MPI_Status status[16];
+  MPI_Request req[16];
 
   MPI_Datatype Row;
-  MPI_Type_contiguous(Lx+2, MPI_DOUBLE, &Row);
+  MPI_Type_contiguous(Lx, MPI_DOUBLE, &Row);
   MPI_Type_commit(&Row);
 
-  MPI_Isend(&v[Ly][0],   1, Row, decomp.north, 0, MPI_COMM_WORLD, &req[0]);
-  MPI_Irecv(&v[Ly+1][0], 1, Row, decomp.north, 0, MPI_COMM_WORLD, &req[1]);
+  MPI_Isend(&v[Ly][1],   1, Row, decomp.north, 0, MPI_COMM_WORLD, &req[0]);
+  MPI_Irecv(&v[Ly+1][1], 1, Row, decomp.north, 0, MPI_COMM_WORLD, &req[1]);
 
-  MPI_Isend(&v[1][0], 1, Row, decomp.south, 0, MPI_COMM_WORLD, &req[2]);
-  MPI_Irecv(&v[0][0], 1, Row, decomp.south, 0, MPI_COMM_WORLD, &req[3]);
+  MPI_Isend(&v[1][1], 1, Row, decomp.south, 0, MPI_COMM_WORLD, &req[2]);
+  MPI_Irecv(&v[0][1], 1, Row, decomp.south, 0, MPI_COMM_WORLD, &req[3]);
 
   MPI_Datatype Column;
-  MPI_Type_vector(Ly+2, 1, Lx+2, MPI_DOUBLE, &Column);
+  MPI_Type_vector(Ly, 1, Lx+2, MPI_DOUBLE, &Column);
   MPI_Type_commit(&Column);
 
-  MPI_Isend(&v[0][Lx],   1, Column, decomp.east, 0, MPI_COMM_WORLD, &req[4]);
-  MPI_Irecv(&v[0][Lx+1], 1, Column, decomp.east, 0, MPI_COMM_WORLD, &req[5]);
+  MPI_Isend(&v[1][Lx],   1, Column, decomp.east, 0, MPI_COMM_WORLD, &req[4]);
+  MPI_Irecv(&v[1][Lx+1], 1, Column, decomp.east, 0, MPI_COMM_WORLD, &req[5]);
 
-  MPI_Isend(&v[0][1], 1, Column, decomp.west, 0, MPI_COMM_WORLD, &req[6]);
-  MPI_Irecv(&v[0][0], 1, Column, decomp.west, 0, MPI_COMM_WORLD, &req[7]);
+  MPI_Isend(&v[1][1], 1, Column, decomp.west, 0, MPI_COMM_WORLD, &req[6]);
+  MPI_Irecv(&v[1][0], 1, Column, decomp.west, 0, MPI_COMM_WORLD, &req[7]);
 
-  MPI_Waitall(8,req,status);
+  MPI_Isend(&v[Ly][1], 1, MPI_DOUBLE, decomp.northwest, 0, MPI_COMM_WORLD, &req[8]);
+  MPI_Irecv(&v[Ly+1][0], 1, MPI_DOUBLE, decomp.northwest, 0, MPI_COMM_WORLD, &req[12]);
+  MPI_Isend(&v[Ly][Lx], 1, MPI_DOUBLE, decomp.northeast, 0, MPI_COMM_WORLD, &req[9]);
+  MPI_Irecv(&v[Ly+1][Lx+1], 1, MPI_DOUBLE, decomp.northeast, 0, MPI_COMM_WORLD, &req[13]);
+  MPI_Isend(&v[1][1], 1, MPI_DOUBLE, decomp.southwest, 0, MPI_COMM_WORLD, &req[10]);
+  MPI_Irecv(&v[0][0], 1, MPI_DOUBLE, decomp.southwest, 0, MPI_COMM_WORLD, &req[14]);
+  MPI_Isend(&v[1][Lx], 1, MPI_DOUBLE, decomp.southeast, 0, MPI_COMM_WORLD, &req[11]);
+  MPI_Irecv(&v[0][Lx+1], 1, MPI_DOUBLE, decomp.southeast, 0, MPI_COMM_WORLD, &req[15]);
+
+  MPI_Waitall(16,req,status);
 
   MPI_Type_free(&Row);
   MPI_Type_free(&Column);

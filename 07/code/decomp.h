@@ -14,7 +14,11 @@ typedef struct {
   int north;     /* rank of process neighbour in +y direction */ 
   int south;     /* rank of process neighbour in -y direction */ 
   int east;      /* rank of process neighbour in +x direction */ 
-  int west;      /* rank of process neighbour in -x direction */ 
+  int west;      /* rank of process neighbour in -x direction */
+  int northwest;
+  int northeast;
+  int southwest;
+  int southeast;
 
 } Decomp;
 
