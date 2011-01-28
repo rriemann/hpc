@@ -1,3 +1,16 @@
 \section*{Aufgabe 1}
 \subsection*{Schleife 1}
 
+Die erste Schleife kann nicht parallelisiert werden, da in ihr \texttt{break}
+aufgerufen wird, was nicht parallelisierbar ist (s. Vorlesung). Wenn man sie parallelisieren
+würde, wüssten die einzelnen Threads nicht, wann in einem der Threads die Abbruchbedingung 
+erfüllt ist und würden weiterlaufen, ohne dass dies gewünscht ist. Die Funktionalität
+wäre also nicht die gleiche wie bei einem Single-Thread-Aufruf.
+
+\subsection*{Schleife 2}
+
+Die zweite Schleife hingegen lässt sich parallelisieren. Hier wird nur aus einem
+Array gelesen und schließlich, je nach Erfüllung der Bedingung, eine als global
+anzulegende Variable (\texttt{foundit}) auf den Wert 1 gesetzt. Dies ist völlig
+unabhängig von der Reihenfolge, in der das Array abgearbeitet wird, sodass hier
+die Parallelisierung mit \texttt{OMP} möglich ist.
