@@ -13,4 +13,55 @@ Die zweite Schleife hingegen lässt sich parallelisieren. Hier wird nur aus eine
 Array gelesen und schließlich, je nach Erfüllung der Bedingung, eine als global
 anzulegende Variable (\texttt{foundit}) auf den Wert 1 gesetzt. Dies ist völlig
 unabhängig von der Reihenfolge, in der das Array abgearbeitet wird, sodass hier
-die Parallelisierung mit \texttt{OMP} möglich ist.
+die Parallelisierung mit \texttt{OpenMP} möglich ist.
+
+\subsection*{Schleife 3}
+
+Diese Schleife ist ebenfalls parallelisierbar, da in der dargestellten Form ausschließlich
+aus zwei verschiedenen Arrays gelesen wird und als Linearkombination in ein weiteres
+Array geschrieben werden. Es gibt also auch hier keine Abhängigkeiten zwischen
+den in den verschiedenen Threads abgearbeiteten Arrays oder zwischen zwischen Elementen
+eines Arrays.
+
+\subsection*{Schleife 4}
+
+Die letzte zu betrachtende Code-Einheit besteht aus zwei ineinander verschachtelten
+\texttt{for}-Schleifen. Es ist zu untersuchen, welche der beiden Schleifen parallelisiert
+werden kann. Da man mit \texttt{OpenMP} nur jeweils eine der beiden Schleifen parallelisieren
+kann, muss man sich keine Gedanken darüber machen, ob es zu Konflikten kommen könnte,
+wenn man dies versuchen würde.
+
+Die äußere Schleife ließe sich parallelisieren. Alles, was in ihr ausgeführt wird,
+hängt direkt von ihrer Laufvariable $i$ ab (\texttt{size[i]} und \texttt{a[i][j+1]}).
+Daher gibt es hier, wie schon im Falle der dritten Schleife argumentiert wurde, keine
+Thread-Grenzen-Konflikte oder Abhängigkeiten des mit $i$ indizierten Arrays.
+
+Die innere Schleife kann, wenn $i$ als globale Variable deklariert wird, ebenfalls
+parallelisiert werden. Es besteht zwar eine Abhängigkeit zwischen den Elementen
+von $a$, aber diese wirkt nur lesend auf die Nachfolgenden Elemente, also insbesondere
+nicht auf vorhergehende Elemente. Wäre dies der Fall, so wäre die Schleife nicht
+ohne Weiteres parallelisierbar. Im vorliegenden Fall aber wird ein Element geschrieben
+und im weiteren Verlauf nicht mehr verwendet. Daher ist diese Schleife parallelisierbar.
+
+\section*{Aufgabe 2}
+
+In dieser Aufgabe war der gegebene Code so umzuformulieren, dass man die Schleife
+mit Hilfe von der \texttt{OpenMP}-Anweisung \texttt{parallel for} parallelisiert
+werden könnte.
+
+Der Code dafür könnte beispielsweise wie in \lref{code2} aussehen:
+
+\begin{lstlisting}[caption=Parallelisierte Schleife,label=lst:code2]
+y[1] = 2;
+#pragma omp parallel for
+for (i = 2; i <= N; i++) {
+    y[i] = 2*i - i;
+}
+\end{lstlisting}
+
+\section*{Aufgabe 3}
+
+In der letzten Aufgabe war wieder ein gegebener Code zu parallelisieren, wobei dieses 
+mal eine Abhängigkeit der Arrayelemente vorhandene ist. Für die Berechnung des Elements
+$i$ muss das Element $i-1$ bekannt sein, sodass eine einfache Parallelisierung nicht
+ohne Weiteres möglich ist.
