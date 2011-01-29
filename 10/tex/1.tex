@@ -65,3 +65,17 @@ In der letzten Aufgabe war wieder ein gegebener Code zu parallelisieren, wobei d
 mal eine Abhängigkeit der Arrayelemente vorhandene ist. Für die Berechnung des Elements
 $i$ muss das Element $i-1$ bekannt sein, sodass eine einfache Parallelisierung nicht
 ohne Weiteres möglich ist.
+
+Möglichkeit 1:
+\begin{lstlisting}[caption=Parallelisierte Schleife,label=lst:code3_1]
+a2 = a;				//vllt a global machen
+#pragma omp parallel for
+for (i = 1; i <= N; i++) {
+  for (j = 0; j <= i; j++) {
+    a2[i] += a[j];
+  }
+}
+\end{lstlisting}
+ist sicher nicht das performanteste...
+
+mehr fällt mir aber spontan nicht ein... 
