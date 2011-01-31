@@ -36,12 +36,10 @@ hängt direkt von ihrer Laufvariable $i$ ab (\texttt{size[i]} und \texttt{a[i][j
 Daher gibt es hier, wie schon im Falle der dritten Schleife argumentiert wurde, keine
 Thread-Grenzen-Konflikte oder Abhängigkeiten des mit $i$ indizierten Arrays.
 
-Die innere Schleife kann, wenn $i$ als globale Variable deklariert wird, ebenfalls
-parallelisiert werden. Es besteht zwar eine Abhängigkeit zwischen den Elementen
-von $a$, aber diese wirkt nur lesend auf die Nachfolgenden Elemente, also insbesondere
-nicht auf vorhergehende Elemente. Wäre dies der Fall, so wäre die Schleife nicht
-ohne Weiteres parallelisierbar. Im vorliegenden Fall aber wird ein Element geschrieben
-und im weiteren Verlauf nicht mehr verwendet. Daher ist diese Schleife parallelisierbar.
+Die innere Schleife kann nicht parallelisiert werden. Es besteht eine Abhängigkeit
+zwischen den Elementen von $a$, sodass die Reihenfolge der Schreibzugriffe auf
+die Elemente eingehalten werden muss. Da dies bei Parallelisierung nicht
+garantiert ist, lässt sich eine Parallelisierung hier nicht durchführen.
 
 \section*{Aufgabe 2}
 
@@ -55,7 +53,7 @@ Der Code dafür könnte beispielsweise wie in \lref{code2} aussehen:
 y[1] = 2;
 #pragma omp parallel for
 for (i = 2; i <= N; i++) {
-    y[i] = 2*i - i;
+    y[i] = 2*i - 1;
 }
 \end{lstlisting}
 
