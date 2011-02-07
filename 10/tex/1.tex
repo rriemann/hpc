@@ -73,7 +73,7 @@ im wesentlichen in drei Abschnitte:
  \item Im ersten Teil wird das Array in Abschnitte geteilt, wonach jedem Thread
        genau ein Abschnitt zugeordnet wird. Die Summation erfolgt hier, als ob
        jeder Thread nicht einen Teil hätte, sondern den gesamten Array. Hierdurch
-       entsteht ein natürlich ein Fehler. Die Elemente eines Abschnittes haben im
+       entsteht natürlich ein Fehler. Die Elemente eines Abschnittes haben im
        Anschluss zwar die korrekte Differenz, jedoch müssen noch alle Elemente aus
        den vorhergehenden Abschnitten aufaddiert werden.
  \item Der zweite Teil korriegiert nun gerade diesen Fehler für das jeweils letzte
