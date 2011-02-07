@@ -1,0 +1,108 @@
+\section*{Aufgabe 1}
+\subsection*{Schleife 1}
+
+Die erste Schleife kann nicht parallelisiert werden, da in ihr \texttt{break}
+aufgerufen wird, was nicht parallelisierbar ist (s. Vorlesung). Wenn man sie parallelisieren
+würde, wüssten die einzelnen Threads nicht, wann in einem der Threads die Abbruchbedingung 
+erfüllt ist und würden weiterlaufen, ohne dass dies gewünscht ist. Die Funktionalität
+wäre also nicht die gleiche wie bei einem Single-Thread-Aufruf.
+
+\subsection*{Schleife 2}
+
+Die zweite Schleife hingegen lässt sich parallelisieren. Hier wird nur aus einem
+Array gelesen und schließlich, je nach Erfüllung der Bedingung, eine als global
+anzulegende Variable (\texttt{foundit}) auf den Wert 1 gesetzt. Dies ist völlig
+unabhängig von der Synchronität und der Reihenfolge, in der das Array
+abgearbeitet wird, sodass hier die Parallelisierung mit \texttt{OpenMP} möglich ist.
+
+\subsection*{Schleife 3}
+
+Diese Schleife ist ebenfalls parallelisierbar, da in der dargestellten Form ausschließlich
+aus zwei verschiedenen Arrays gelesen wird und als Linearkombination in ein weiteres
+Array geschrieben werden. Es gibt also auch hier keine Abhängigkeiten zwischen
+den in den verschiedenen Threads abgearbeiteten Arrays oder zwischen zwischen Elementen
+eines Arrays.
+
+\subsection*{Schleife 4}
+
+Die letzte zu betrachtende Code-Einheit besteht aus zwei ineinander verschachtelten
+\texttt{for}-Schleifen. Es ist zu untersuchen, welche der beiden Schleifen parallelisiert
+werden kann. Da man mit \texttt{OpenMP} nur jeweils eine der beiden Schleifen parallelisieren
+kann, muss man sich keine Gedanken darüber machen, ob es zu Konflikten kommen könnte,
+wenn man dies versuchen würde.
+
+Die äußere Schleife ließe sich parallelisieren. Alles, was in ihr ausgeführt wird,
+hängt direkt von ihrer Laufvariable $i$ ab (\texttt{size[i]} und \texttt{a[i][j+1]}).
+Daher gibt es hier, wie schon im Falle der dritten Schleife argumentiert wurde, keine
+Thread-Grenzen-Konflikte oder Abhängigkeiten des mit $i$ indizierten Arrays.
+
+Die innere Schleife kann nicht parallelisiert werden. Es besteht eine Abhängigkeit
+zwischen den Elementen von $a$, sodass die Reihenfolge der Schreibzugriffe auf
+die Elemente eingehalten werden muss. Da dies bei Parallelisierung nicht
+garantiert ist, lässt sich eine Parallelisierung hier nicht durchführen.
+
+\section*{Aufgabe 2}
+
+In dieser Aufgabe war der gegebene Code so umzuformulieren, dass man die Schleife
+mit Hilfe von der \texttt{OpenMP}-Anweisung \texttt{parallel for} parallelisiert
+werden könnte.
+
+Der Code dafür könnte beispielsweise wie in \lref{code2} aussehen:
+
+\begin{lstlisting}[caption=Parallelisierte Schleife,label=lst:code2]
+y[1] = 2;
+#pragma omp parallel for
+for (i = 2; i <= N; i++) {
+    y[i] = 2*i - 1;
+}
+\end{lstlisting}
+
+\section*{Aufgabe 3}
+
+In der letzten Aufgabe war wieder ein gegebener Code zu parallelisieren, wobei dieses 
+mal eine Abhängigkeit der Arrayelemente vorhanden ist. Für die Berechnung des Elements
+$i$ muss das Element $i-1$ bekannt sein, sodass eine einfache Parallelisierung nicht
+ohne Weiteres möglich ist.
+
+Der in \lref{code3_parallel} abgedruckte Code soll nun eine Möglichkeit aufzeigen,
+wie \lref{code3_orig} dennoch parallelisiert werden kann.
+
+Der Code musste für die Parallelisierung stark verändert werden. Er teilt sich
+im wesentlichen in drei Abschnitte:
+\begin{enumerate}
+ \item Im ersten Teil wird das Array in Abschnitte geteilt, wonach jedem Thread
+       genau ein Abschnitt zugeordnet wird. Die Summation erfolgt hier, als ob
+       jeder Thread nicht einen Teil hätte, sondern den gesamten Array. Hierdurch
+       entsteht ein natürlich ein Fehler. Die Elemente eines Abschnittes haben im
+       Anschluss zwar die korrekte Differenz, jedoch müssen noch alle Elemente aus
+       den vorhergehenden Abschnitten aufaddiert werden.
+ \item Der zweite Teil korriegiert nun gerade diesen Fehler für das jeweils letzte
+       Element eines Abschnittes. Dieser Part wird nicht parallel ausgeführt.
+ \item Da im ersten Abschnitt keine Korrektur erfolgen muss, da es keine vorhergehenden
+       Elemente gibt, kann der erste Thread sich um die Berechnung der letzen
+       Elemente des Arrays kümmern, die bei der Division mit Rest zur Bestimmung
+       der Abschnittlänge vernachlässigt wurden. Da das letzte Element des letzten
+       Abschnitts bereits korrigiert wurde, gibt es hier nichts weiter zu beachten.
+
+       Die anderen Threads addieren die Korrekur, die durch das letzte Element
+       des vorhergehenden Abschnitts gegeben ist, auf alle übrigen Elemente eines
+       Abschnittes.
+\end{enumerate}
+
+Für die folgenden Überlegungen gehen wir davon aus, dass die Arraylänge wesentlich
+größer ist als die Anzahl der Threads.
+
+Da (fast) jedes Array-Element zweimal bearbeitet werden muss, ergibt sich erst ein
+Geschwindigkeitsvorteil bei mehr als zwei Threads. Da durch die Index-Berechnungen
+ein gewisser Overhead durch die Parallelisierung entsteht, sollten möglichst viele
+Threads verwendet werden.
+
+
+
+\begin{lstlisting}[caption=Original-Code,label=lst:code3_orig]
+for (i = 1; i <= N; i++) {
+  a[i] += a[i-1];
+}
+\end{lstlisting}
+
+\lstinputlisting[caption=Parallelisierter Code,label=lst:code3_parallel]{robert.cpp}
