@@ -30,12 +30,14 @@ void cg_init5(field solution, field rhs, int Nx, int Ny)
 {
     int x, y;
 
+    #pragma omp parallel for
     for (y = 0; y <= Ny + 1; y++) {
         for (x = 0; x <= Nx + 1; x++) {
             rhs[y][x] = solution[y][x];
 	}
     }
 
+    #pragma omp parallel for
     for (x = 1; x <= Nx; x++) {
         rhs[1][x] += rhs[0][x];
         rhs[Ny][x] += rhs[Ny + 1][x];
@@ -43,6 +45,7 @@ void cg_init5(field solution, field rhs, int Nx, int Ny)
         solution[Ny][x] = rhs[Ny][x];
     }
 
+    #pragma omp parallel for
     for (y = 1; y <= Ny; y++) {
         rhs[y][1] += rhs[y][0];
         rhs[y][Nx] += rhs[y][Nx + 1];
@@ -55,6 +58,7 @@ void cg_init9(field solution, field rhs, int Nx, int Ny)
 {
     int x, y;
 
+    #pragma omp parallel for
     for (x = 1; x <= Nx; x++) {
 	solution[1][x] = solution[1][x] + 4.0 * solution[0][x] 
                                               + solution[0][x - 1] 
@@ -64,6 +68,7 @@ void cg_init9(field solution, field rhs, int Nx, int Ny)
                                                 + solution[Ny + 1][x + 1];
     }
 
+    #pragma omp parallel for
     for (y = 1; y <= Ny; y++) {
 	solution[y][1] = solution[y][1] + 4.0 * solution[y][0] 
                                               + solution[y - 1][0] 
@@ -78,6 +83,7 @@ void cg_init9(field solution, field rhs, int Nx, int Ny)
     solution[1][Nx]  = solution[1][Nx] - solution[0][Nx + 1];
     solution[Ny][Nx] = solution[Ny][Nx] - solution[Ny + 1][Nx + 1];
 
+    #pragma omp parallel for
     for (y = 0; y <= Ny + 1; y++) {
         for (x = 0; x <= Nx + 1; x++) {
             rhs[y][x] = solution[y][x];
