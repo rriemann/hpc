@@ -30,7 +30,7 @@ void cg_init5(field solution, field rhs, int Nx, int Ny)
 {
     int x, y;
 
-    #pragma omp parallel for
+    #pragma omp parallel for private(x)
     for (y = 0; y <= Ny + 1; y++) {
         for (x = 0; x <= Nx + 1; x++) {
             rhs[y][x] = solution[y][x];
@@ -83,7 +83,7 @@ void cg_init9(field solution, field rhs, int Nx, int Ny)
     solution[1][Nx]  = solution[1][Nx] - solution[0][Nx + 1];
     solution[Ny][Nx] = solution[Ny][Nx] - solution[Ny + 1][Nx + 1];
 
-    #pragma omp parallel for
+    #pragma omp parallel for private(x)
     for (y = 0; y <= Ny + 1; y++) {
         for (x = 0; x <= Nx + 1; x++) {
             rhs[y][x] = solution[y][x];
@@ -96,6 +96,7 @@ void cg_matrix_mult5(field out, field in, int Nx, int Ny)
     int x, y;
     double a, b, c, d;
 
+    #pragma omp parallel for private(a,b,c,d,x)
     for (y = 1; y <= Ny; y++) {
         for (x = 1; x <= Nx; x++) {
            if (x ==  1) a = 0;  else  a = in[y][x - 1];
@@ -106,13 +107,14 @@ void cg_matrix_mult5(field out, field in, int Nx, int Ny)
            out[y][x] = 4.0 * in[y][x] - a - b - c - d;
         }
     }
-}      
+}
 
 void cg_matrix_mult9(field out, field in, int Nx, int Ny)
 {
     int x, y;
     double n, s, e, w, ne, nw, se, sw;
 
+    #pragma omp parallel for private(x,n,s,e,w,ne,nw,se,sw)
     for (y = 1; y <= Ny; y++) {
         for (x = 1; x <= Nx; x++) {
 	    n = in[y + 1][x];
@@ -134,7 +136,7 @@ void cg_matrix_mult9(field out, field in, int Nx, int Ny)
 	    out[y][x] = 20.0 * in[y][x] - 4.0 * (n + s + e + w) - ne - nw - se - sw;
          }
     }
-}      
+}
 
 void cg_kernel(MatrixMult matrix_mult, field x, field b, int Nx, int Ny, 
                double eps, int max_iter, int *iterations, double* diff)
@@ -147,6 +149,7 @@ void cg_kernel(MatrixMult matrix_mult, field x, field b, int Nx, int Ny,
     double ak, bk, rtr, rtrold, paap;
     int i, j, niter;
 
+    #pragma omp parallel for private(i)
     for (j = 0; j <= Ny + 1; j++) {
         for (i = 0; i <= Nx + 1; i++) {
             r[j][i] = 0;
@@ -158,6 +161,7 @@ void cg_kernel(MatrixMult matrix_mult, field x, field b, int Nx, int Ny,
     matrix_mult(r, x, Nx, Ny);
 
     rtrold = 0;
+    #pragma omp parallel for private(i) reduction(+:rtrold)
     for (j = 1; j <= Ny; j++) {
         for (i = 1; i <= Nx; i++) {
             r[j][i] = b[j][i] - r[j][i];
@@ -168,10 +172,10 @@ void cg_kernel(MatrixMult matrix_mult, field x, field b, int Nx, int Ny,
 
     for (niter = 1; niter <= max_iter; niter++) {
 
-        matrix_mult(aap, p, Nx, Ny);
-
+        matrix_mult(aap, p, Nx, Ny);				// ist das hier ein problem? konnte nicht so richtig rausfinden, was die funktion macht
+								// außerdem: wird in der funktion weiter parallelisiert? wäre imho ein problem...
         paap = 0;
-        for (j = 1; j <= Ny; j++) {
+        for (j = 1; j <= Ny; j++) {				//mit reduction parallelisierbar. abh. davon, ob die äußere schleife schon par. ist
             for (i = 1; i <= Nx; i++) {
 	        paap += p[j][i] * aap[j][i];
             }
