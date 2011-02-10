@@ -8,9 +8,16 @@ void jacobi(field solution,
     int x, y, niter;
     field v = field_alloc(Ny, Nx);
 
-
+    // kann nicht parallelisiert werden, weil 
+    // - spätere Schleifeniterationen von Daten abhängen, die bei früheren
+    //   Iterationen erst berechnet werden müssen
+    // - das if break eine parallelisierung nicht erlaubt
+    // - jacobi(...) ohnehin schon parallelisiert ist und eine weitere
+    //   Verzweigung nicht möglich ist.
     for (niter = 1; niter <= max_iter; niter++) {
 
+        // omp ist eigentlich ein overkill, wenn memcpy(...) es auch getan hätte.
+        #pragma omp parallel for private(x)
 	for (y = 0; y <= Ny + 1; y++) {
 	    for (x = 0; x <= Nx + 1; x++) {
 		v[y][x] = solution[y][x];
@@ -43,6 +50,7 @@ void jacobi5(field vneu, field valt, int Nx, int Ny, double *diff)
     double d, sum;
 
     sum = 0;
+    #pragma omp parallel for reduction(+:sum) private(x,d)
     for (y = 1; y <= Ny; y++) {
         for (x = 1; x <= Nx; x++) {
             vneu[y][x] = (valt[y][x - 1] 
@@ -63,6 +71,7 @@ void jacobi9(field vneu, field valt, int Nx, int Ny, double *diff)
     double d, sum;
 
     sum = 0;
+    #pragma omp parallel for reduction(+:sum) private(x,d)
     for (y = 1; y <= Ny; y++) {
         for (x = 1; x <= Nx; x++) {
             vneu[y][x] = 4.0 * (valt[y][x - 1] 
