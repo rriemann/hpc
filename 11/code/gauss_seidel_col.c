@@ -39,7 +39,9 @@ void gauss_seidel_col5(field v, int Nx, int Ny, double *diff)
     double vold, d, sum, sum2;
 
     sum = 0;
-    // Äußerste for-Schleife reicht nur für 2 Threads
+    // - Äußerste for-Schleife reicht nur für 2 Threads
+    // - Reihenfolge der Lese- und Schreibzugriffe von v[y][x] kann hier nicht
+    //   vertauscht werden
     for (eo = 0; eo <= 1; eo++) {
         sum2 = 0;
         #pragma omp parallel for reduction(+:sum2) private(d,vold,x)
@@ -73,7 +75,9 @@ void gauss_seidel_col9(field v, int Nx, int Ny, double *diff)
     colour[0][1] = 3;
 
     sum = 0;
-    // Äußerste for-Schleife reicht nur für 4 Threads
+    // - Äußerste for-Schleife reicht nur für 4 Threads
+    // - Reihenfolge der Lese- und Schreibzugriffe von v[y][x] kann hier nicht
+    //   vertauscht werden
     for (col = 0; col <= 3; col++) {
         sum2 = 0;
         #pragma omp parallel for reduction(+:sum2) private(d,vold,x,colx,coly)
