@@ -7,6 +7,12 @@ void gauss_seidel_col(field solution,
 {
     int niter;
 
+    // kann nicht parallelisiert werden, weil 
+    // - spätere Schleifeniterationen von Daten abhängen, die bei früheren
+    //   Iterationen erst berechnet werden müssen
+    // - das if break eine parallelisierung nicht erlaubt
+    // - gauss_...(...) ohnehin schon parallelisiert ist und eine weitere
+    //   Verzweigung nicht möglich ist.
     for (niter = 1; niter <= max_iter; niter++) {
 
 	switch (stencil) {
@@ -30,23 +36,27 @@ void gauss_seidel_col(field solution,
 void gauss_seidel_col5(field v, int Nx, int Ny, double *diff)
 {
     int x, y, eo;
-    double vold, d, sum;
+    double vold, d, sum, sum2;
 
     sum = 0;
+    // Äußerste for-Schleife reicht nur für 2 Threads
     for (eo = 0; eo <= 1; eo++) {
-    for (y = 1; y <= Ny; y++) {
-        for (x = 1; x <= Nx; x++) {
-	    if ((x + y) % 2 == eo) {
-		vold = v[y][x];
-		v[y][x] = (v[y][x - 1] 
-			   + v[y][x + 1]
-			   + v[y - 1][x] 
-			   + v[y + 1][x]) * 0.25;
-		d = v[y][x] - vold;
-		sum += d * d;
-	    }
-	}
-    }
+        sum2 = 0;
+        #pragma omp parallel for reduction(+:sum2) private(d,vold,x)
+        for (y = 1; y <= Ny; y++) {
+            for (x = 1; x <= Nx; x++) {
+                if ((x + y) % 2 == eo) {
+                    vold = v[y][x];
+                    v[y][x] = (v[y][x - 1] 
+                            + v[y][x + 1]
+                            + v[y - 1][x] 
+                            + v[y + 1][x]) * 0.25;
+                    d = v[y][x] - vold;
+                    sum2 += d * d;
+                }
+            }
+        }
+        sum += sum2;
     }
 
     *diff = 4.0 * sqrt(sum);
@@ -55,7 +65,7 @@ void gauss_seidel_col5(field v, int Nx, int Ny, double *diff)
 void gauss_seidel_col9(field v, int Nx, int Ny, double *diff)
 {
     int x, y, col, colx, coly, colour[2][2];
-    double vold, d, sum;
+    double vold, d, sum, sum2;
 
     colour[1][1] = 0;
     colour[0][0] = 1;
@@ -63,27 +73,31 @@ void gauss_seidel_col9(field v, int Nx, int Ny, double *diff)
     colour[0][1] = 3;
 
     sum = 0;
+    // Äußerste for-Schleife reicht nur für 4 Threads
     for (col = 0; col <= 3; col++) {
-    for (y = 1; y <= Ny; y++) {
-	coly = y % 2;
-        for (x = 1; x <= Nx; x++) {
-            colx= x % 2;
-	    if (colour[coly][colx] == col) {
-		vold = v[y][x];
-		v[y][x] = 4.0 * (v[y][x - 1] 
-				 + v[y][x + 1]
-				 + v[y - 1][x] 
-				 + v[y + 1][x])
-		                 + v[y - 1][x - 1]
-		                 + v[y + 1][x - 1]
-		                 + v[y - 1][x + 1]
-		                 + v[y + 1][x + 1];
-		v[y][x] *= 0.05; 
-		d = v[y][x] - vold;
-		sum += d * d;
-	    }
-	}
-    }
+        sum2 = 0;
+        #pragma omp parallel for reduction(+:sum) private(d,vold,y,x,colx,coly)
+        for (y = 1; y <= Ny; y++) {
+            coly = y % 2;
+            for (x = 1; x <= Nx; x++) {
+                colx= x % 2;
+                if (colour[coly][colx] == col) {
+                    vold = v[y][x];
+                    v[y][x] = 4.0 * (v[y][x - 1] 
+                                    + v[y][x + 1]
+                                    + v[y - 1][x] 
+                                    + v[y + 1][x])
+                                    + v[y - 1][x - 1]
+                                    + v[y + 1][x - 1]
+                                    + v[y - 1][x + 1]
+                                    + v[y + 1][x + 1];
+                    v[y][x] *= 0.05; 
+                    d = v[y][x] - vold;
+                    sum2 += d * d;
+                }
+            }
+        }
+        sum += sum2;
     }
 
     *diff = 20.0 * sqrt(sum);
