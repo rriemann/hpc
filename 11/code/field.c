@@ -16,6 +16,8 @@ field field_alloc(int ny, int nx)
     tmp = (double **) malloc(ny * sizeof(double *));
     tmp[0] = (double *) malloc(nx * ny * sizeof(double));
 
+    // nicht ohne weiteres parallelisierbar, ohne die Struktur prinzipiell zu verändern
+    // Lösung entspräche dem Code aus Aufgabe 3 des letzten Projekts
     for (i = 1; i < ny; i++)
         tmp[i] = tmp[i - 1] + nx;
 
