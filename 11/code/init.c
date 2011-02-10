@@ -7,6 +7,7 @@ void init(char *datafile, field v, int Nx, int Ny)
     double  value;
     FILE   *data;
 
+    #pragma omp parallel for private(x)
     for (y = 0; y <= Ny + 1; y++) {
         for (x = 0; x <= Nx + 1; x++) {
             v[y][x] = 0;
