@@ -170,12 +170,15 @@ void cg_kernel(MatrixMult matrix_mult, field x, field b, int Nx, int Ny,
         }
     }
 
+    // kann nicht parallelisiert werden, da eine break-Anweisung ausgeführt
+    // werden könnte, was nicht erlaubt ist
     for (niter = 1; niter <= max_iter; niter++) {
 
-        matrix_mult(aap, p, Nx, Ny);				// ist das hier ein problem? konnte nicht so richtig rausfinden, was die funktion macht
-								// außerdem: wird in der funktion weiter parallelisiert? wäre imho ein problem...
+        matrix_mult(aap, p, Nx, Ny);
+
         paap = 0;
-        for (j = 1; j <= Ny; j++) {				//mit reduction parallelisierbar. abh. davon, ob die äußere schleife schon par. ist
+        #pragma omp parallel for reduction(+:paap) private(i)
+        for (j = 1; j <= Ny; j++) {
             for (i = 1; i <= Nx; i++) {
 	        paap += p[j][i] * aap[j][i];
             }
@@ -184,6 +187,7 @@ void cg_kernel(MatrixMult matrix_mult, field x, field b, int Nx, int Ny,
         ak = rtrold / paap;
 
         rtr = 0;
+	#pragma omp parallel for reduction(+:rtr) private(i)
         for (j = 1; j <= Ny; j++) {
             for (i = 1; i <= Nx; i++) {
                 x[j][i] += ak * p[j][i];
@@ -197,6 +201,7 @@ void cg_kernel(MatrixMult matrix_mult, field x, field b, int Nx, int Ny,
         bk = rtr / rtrold;
         rtrold = rtr;
 
+	#pragma omp parallel for private(i)
         for (j = 1; j <= Ny; j++) {
             for (i = 1; i <= Nx; i++) {
 	        p[j][i] = bk * p[j][i] + r[j][i];
