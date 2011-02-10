@@ -76,7 +76,7 @@ void gauss_seidel_col9(field v, int Nx, int Ny, double *diff)
     // Äußerste for-Schleife reicht nur für 4 Threads
     for (col = 0; col <= 3; col++) {
         sum2 = 0;
-        #pragma omp parallel for reduction(+:sum) private(d,vold,y,x,colx,coly)
+        #pragma omp parallel for reduction(+:sum2) private(d,vold,x,colx,coly)
         for (y = 1; y <= Ny; y++) {
             coly = y % 2;
             for (x = 1; x <= Nx; x++) {
