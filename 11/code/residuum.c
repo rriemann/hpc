@@ -4,7 +4,7 @@
 void residuum(char *datafile, field solution, int stencil, int Nx, int Ny, 
               double *diff)
 {
-    double sum, d; 
+    double sum, d, sum2; 
     int i, j;
     field rhs = field_alloc(Ny, Nx);
     field aax = field_alloc(Ny, Nx);
@@ -23,11 +23,14 @@ void residuum(char *datafile, field solution, int stencil, int Nx, int Ny,
     }
 
     sum = 0;
+    #pragma omp parallel for reduction(+:sum) private(i,d,sum2)
     for (j = 1; j <= Ny; j++) {
+        sum2 = 0;
 	for (i = 1; i <= Nx; i++) {
 	    d = aax[j][i] - rhs[j][i];
-	    sum += d * d;
+	    sum2 += d * d;
 	}
+	sum += sum2;
     }
 
     *diff = sqrt(sum);
