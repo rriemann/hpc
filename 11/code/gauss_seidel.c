@@ -7,6 +7,8 @@ void gauss_seidel(field solution,
 {
     int niter;
 
+    // nicht parallelisierbar, da break-Anweisungen ausgeführt werden müssten,
+    // was nicht erlaubt ist
     for (niter = 1; niter <= max_iter; niter++) {
 
 	switch (stencil) {
@@ -33,7 +35,11 @@ void gauss_seidel5(field v, int Nx, int Ny, double *diff)
     double vold, d, sum;
 
     sum = 0;
+    // nicht praktikabel parallelisierbar, da die Reihenfolge der Ausführung
+    // relevant ist. Nur mit sehr großem Aufwand ließe sich eine Parallelisierung
+    // umsetzen
     for (y = 1; y <= Ny; y++) {
+        // nicht parallelisierbar (siehe Argument für äußere Schleife)
         for (x = 1; x <= Nx; x++) {
             vold = v[y][x];
             v[y][x] = (v[y][x - 1] 
@@ -54,6 +60,7 @@ void gauss_seidel9(field v, int Nx, int Ny, double *diff)
     double vold, d, sum;
 
     sum = 0;
+    // beide Schleifen nicht parallelisierbar, Argument: siehe gauss_seidel5
     for (y = 1; y <= Ny; y++) {
         for (x = 1; x <= Nx; x++) {
             vold = v[y][x];
